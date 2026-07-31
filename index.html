@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>「どっちが本物の私？」― AI詐欺セミナー構成案（改訂版）</title>
-<meta name="description" content="シニア向け60分セミナーの構成案・改訂版。冒頭のクイズの答えを最後まで明かさない構成で、聴衆が3回「自分で間違える」体験を通じて、見分けない護身術を持ち帰る。">
+<title>巧妙化するAI詐欺から身を守る ― 5つの「そうなんだ」で貫く60分</title>
+<meta name="description" content="シニア向け60分セミナー構成案。聴衆は全体を覚えていない——だから各パートを単体で面白い「そうなんだ」として設計し、最後に5つを一気に回収する。">
 <style>
   :root{
     --bg:#eef0f3; --card:#ffffff; --ink:#20242c; --muted:#5c6472;
@@ -44,21 +44,16 @@
   .lede{font-size:1.02rem;color:var(--muted);margin:0 0 26px;text-wrap:pretty;}
   .lede b{color:var(--ink);font-weight:600;}
 
-  .cards{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 10px;}
-  .cue{flex:1;min-width:120px;border-radius:12px;padding:12px 14px;border:1px solid var(--line);}
-  .cue .name{font-family:var(--serif);font-size:1.15rem;font-weight:600;}
-  .cue .state{font-size:.75rem;font-weight:600;display:inline-block;margin-top:5px;
-    padding:2px 9px;border-radius:999px;}
-  .cue.gone{background:var(--danger-soft);border-color:transparent;}
-  .cue.gone .state{background:var(--danger);color:#fff;}
-  .cue.gone .name{text-decoration:line-through;text-decoration-color:var(--danger);
-    text-decoration-thickness:2px;}
-  .cue.next{background:var(--accent-soft);border-color:transparent;}
-  .cue.next .state{background:var(--accent);color:#fff;}
-  .cue.quiz{background:var(--card);border:2px dashed var(--accent);box-shadow:var(--shadow);}
-  .cue.quiz .state{background:var(--chip);color:var(--muted);}
-  .cue.quiz .name::after{content:" 🔊";font-size:.9rem;}
-  .cue-cap{font-size:.85rem;color:var(--muted);margin:0 0 26px;}
+  /* 5 aha peaks */
+  .peaks{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:8px;}
+  .peaks li{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px 16px;box-shadow:var(--shadow);}
+  .peaks .n{font-family:var(--mono);font-weight:700;color:#fff;background:var(--accent);
+    border-radius:8px;width:30px;height:30px;display:grid;place-items:center;margin-top:4px;}
+  .peaks b{font-family:var(--serif);font-size:1.03rem;}
+  .peaks p{margin:1px 0 0;font-size:.86rem;color:var(--muted);}
+  .peaks-cap{font-size:.85rem;color:var(--muted);margin:0 0 26px;}
 
   .meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
     gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;
@@ -74,7 +69,7 @@
     padding-bottom:10px;border-bottom:2px solid var(--line);letter-spacing:.02em;}
   .sub{color:var(--muted);font-size:.95rem;margin:0 0 22px;}
 
-  /* run-of-show overview */
+  /* run-of-show */
   .flow{list-style:none;margin:0;padding:0;}
   .flow li{display:grid;grid-template-columns:78px 1fr;gap:16px;padding:16px 0;
     border-top:1px solid var(--line-soft);align-items:start;}
@@ -84,19 +79,24 @@
   .flow .step h4{font-family:var(--serif);font-size:1.12rem;font-weight:600;margin:0 0 3px;}
   .flow .step p{margin:0;font-size:.92rem;color:var(--muted);}
   .flow li.aux .step h4{font-family:var(--sans);font-size:1rem;color:var(--muted);}
-  .flow .tag{display:inline-block;font-size:.7rem;font-weight:700;color:#fff;
-    background:var(--danger);border-radius:999px;padding:1px 9px;margin-left:8px;
-    vertical-align:2px;letter-spacing:.05em;}
+
+  /* connector between modules */
+  .conn{display:flex;justify-content:center;margin:0 0 20px;}
+  .conn span{font-family:var(--serif);font-weight:600;font-size:.95rem;color:var(--accent);
+    background:var(--accent-soft);border-radius:999px;padding:4px 22px;}
 
   /* module detail */
   .mod{background:var(--card);border:1px solid var(--line);border-radius:14px;
     padding:22px clamp(16px,3vw,26px);box-shadow:var(--shadow);margin-bottom:20px;}
-  .mod-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .mod-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
   .mod-head .num{font-family:var(--mono);font-weight:700;color:var(--accent);font-size:1.05rem;}
   .mod-head h3{font-family:var(--serif);font-size:1.22rem;font-weight:600;margin:0;flex:1;
     min-width:200px;letter-spacing:.01em;}
   .mod-head .dur{font-family:var(--mono);font-size:.8rem;color:var(--muted);white-space:nowrap;
     font-variant-numeric:tabular-nums;}
+  .aha{margin:0 0 14px;padding:10px 14px;border-left:4px solid var(--accent);
+    background:var(--accent-soft);border-radius:0 10px 10px 0;font-size:.92rem;}
+  .aha b{font-family:var(--serif);}
   .beats{list-style:none;margin:0;padding:0;display:grid;gap:2px;}
   .beat{display:grid;grid-template-columns:56px 1fr;gap:14px;padding:12px 0;
     border-top:1px solid var(--line-soft);}
@@ -119,9 +119,6 @@
     border-radius:2px;background:var(--accent);}
   .list.check li::before{content:"✓";background:none;left:14px;top:9px;color:var(--ok);font-weight:700;}
   .list li b{color:var(--ink);}
-  .list.design li::before{content:counter(design);counter-increment:design;background:none;
-    left:11px;top:11px;color:var(--accent);font-family:var(--mono);font-weight:700;font-size:.85rem;}
-  .list.design{counter-reset:design;}
 
   footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);
     font-size:.82rem;color:var(--muted);}
@@ -140,89 +137,71 @@
 
 <div class="wrap">
 
-  <p class="eyebrow">セミナー構成案（改訂版） ・ 対面 60分 ・ シニア向け</p>
-  <h1>「どっちが、本物の私でしょう？」</h1>
-  <p class="tagline">― フィンテック企業が現場から語る、"見分けない"護身術</p>
-  <p class="lede">講演の冒頭、2つの「講師の声」を流します。片方は本物、片方はAI——どちらでしょう？ <b>この答えは、最後の最後まで明かしません。</b>60分のあいだ、聴衆は3回「自分の判断が外れる」体験をし、最後に一番大きな種明かしとともに、<b>見分けなくても身を守れるたった一つの行動</b>を持ち帰ります。</p>
+  <p class="eyebrow">セミナー構成案 ・ 対面 60分 ・ シニア向け</p>
+  <h1>巧妙化するAI詐欺から身を守る</h1>
+  <p class="tagline">― 5つの「そうなんだ」で貫く60分（フィンテック企業が現場から解説）</p>
+  <p class="lede">聴衆は講演の全体像を頭に入れて聞いてはいません。だからこの構成案は、<b>各パートが単体で面白い「そうなんだ！」を1つずつ持つ</b>ように作り、パート同士は「しかし」「だから」で最小限につなぎ、<b>最後に5つを一気に回収して</b>「全部つながっていた」という感動で締めます。どこか一区間だけ聞いた人にも、必ず持ち帰りがあります。</p>
 
-  <div class="cards" role="img" aria-label="冒頭クイズ：音声Aと音声B、どちらが本物の講師の声か">
-    <div class="cue quiz"><div class="name">音声A</div><span class="state">本物…？</span></div>
-    <div class="cue quiz"><div class="name">音声B</div><span class="state">AI…？</span></div>
-  </div>
-  <p class="cue-cap">冒頭で流す2つの「私の声」。この一つの問いが60分を貫き、答え合わせが講演のクライマックスになります。</p>
+  <ol class="peaks" aria-label="この講演の5つのそうなんだ">
+    <li><span class="n">1</span><div><b>いまの詐欺の主役は、AIではなく「番号」</b><p>直感は「AIの声」。実際はニセ警察＋番号偽装が被害額の7割。</p></div></li>
+    <li><span class="n">2</span><div><b>バレバレの嘘には、ゾッとする理由があった</b><p>「オオアリクイに殺されて」——わざとアホな文面は、疑わない人だけを選び出すフィルタ。</p></div></li>
+    <li><span class="n">3</span><div><b>AIで論理が反転する。賢い人ほど狙われる</b><p>選別が要らなくなると、狙う価値があるのは「しっかりした人」になる。</p></div></li>
+    <li><span class="n">4</span><div><b>「本人らしさ」は、相手がこちらに合わせて作ってくる</b><p>ライブ実演：AIの話し方が、その場の一言で変わる。そして偽物の声は断らない。</p></div></li>
+    <li><span class="n">5</span><div><b>見分けなくていい。一度切ってかけ直すだけで、全部無効</b><p>手がかりが全滅しても、土俵を替えれば一手で守れる。</p></div></li>
+  </ol>
+  <p class="peaks-cap">この5つが各パートの「山」。結論パートで5つを順に回収し、まとまりは論理ではなく回収で作ります。</p>
 
   <dl class="meta">
     <div><dt>対象</dt><dd>60歳前後・多少ネットを使う方<br><span>完全な初心者ではない層</span></dd></div>
     <div><dt>形式・時間</dt><dd>対面 60分<br><span>自己紹介3分＋本編46分＋質疑6分＋アンケート5分</span></dd></div>
-    <div><dt>いちばんの見せ場</dt><dd>「自分で間違える」体験 ×3回<br><span>声クイズ／番号クイズ／顔クイズ＋ライブAI対話</span></dd></div>
+    <div><dt>いちばんの見せ場</dt><dd>「そうなんだ」×5＋ライブAI実演<br><span>クイズ・笑い・物語・体験、と山の味を変える</span></dd></div>
     <div><dt>お土産</dt><dd>身を守る3つの手順<br><span>一度切る／自分で調べる／電話で決めない</span></dd></div>
   </dl>
 
   <section>
-    <h2>この構成のねらい（感情の設計）</h2>
-    <p class="sub">前版は論理の骨格は同じでしたが「正しい話を聞く60分」でした。改訂版は同じ結論へ、体験でたどり着かせます。</p>
-    <ul class="list design">
-      <li><b>問いを開いて、閉じない。</b>冒頭の声クイズの答えを最後まで保留し、60分間「気になる状態」を維持する。結論パートが自動的にクライマックスになる。</li>
-      <li><b>聴衆が3回、自分で間違える。</b>声クイズ（冒頭）・「一番偽りやすい手がかりは？」挙手クイズ（中盤）・顔クイズ（山場）。「見分けられない」と60分言われるのではなく、見分けに3回失敗してから結論を聞く。</li>
-      <li><b>数字より先に、物語。</b>38億円のニセ会議事件（香港）を「その朝の経理担当者」の視点で語ってから、統計で裏づける。数字は正しさを、物語は記憶を担う。</li>
-      <li><b>山場では脅威の"実物"を見せる。</b>AIとの雑談ではなく、講師本人のクローン音声と、AI生成の顔。本人の声・同意済み素材だけを使うので、倫理制約（手口を教えない・無断素材を使わない）はそのまま守られる。</li>
-      <li><b>フィンテックの看板を回収する。</b>「決済の現場だから早く見える」と名乗るだけでなく、現場で実際に見た話を自己紹介で1つ話す。ここでしか聞けない話を最初の3分に置く。</li>
+    <h2>構成の原則（この案の作り方）</h2>
+    <p class="sub">今回の設計判断そのものを4行で。スライド化・原稿化のときもこの原則を守ります。</p>
+    <ul class="list">
+      <li><b>聴衆は全体を覚えていない。</b>人が一度に保持できるのは3〜5項目。だから「全体で1つの面白さ」ではなく「単体で面白い山を5つ」置く。</li>
+      <li><b>各パートは1行で立つこと。</b>そのパートだけ聞いた人にも「そうなんだ」が1つ残るか、で合否を判定する（立たない区間は作り直し）。</li>
+      <li><b>接続は「しかし」「だから」だけ。</b>「そして」で並べると雑学の羅列になる。パート間の橋は一言でよいが、必ず逆接か因果にする。</li>
+      <li><b>まとまりは回収で作る。</b>結論で5つの山を一言ずつ順に回収する。記憶に残るのは山の高さと終わり方——途中の網羅性ではない。</li>
     </ul>
   </section>
 
   <section>
-    <h2>全体を貫くもう一つの軸 ― 手がかりが一枚ずつ抜かれる</h2>
-    <div class="cards" role="img" aria-label="本人だと信じる手がかり：番号はもう抜かれた、顔と声はこれから抜かれる">
-      <div class="cue gone"><div class="name">番号</div><span class="state">もう偽れる（＝今）</span></div>
-      <div class="cue next"><div class="name">顔</div><span class="state">これから（AI）</span></div>
-      <div class="cue next"><div class="name">声</div><span class="state">これから（AI）</span></div>
-    </div>
-    <p class="cue-cap">私たちが電話で「本人だ」と信じる手がかり（番号・顔・声…）が、一つずつ偽れるようになっていく。冒頭クイズと並ぶ、全体のテーマです。</p>
-  </section>
-
-  <section>
     <h2>全体の流れ（60分）</h2>
-    <p class="sub">最初の13分にクイズと物語を集中させて心をつかみ、統計と理屈は「なぜあのクイズで外れたのか」の説明として後から出します。</p>
+    <p class="sub">山の「味」を毎回変えます：①クイズ ②笑い話 ③物語 ④体験 ⑤結論。同じ刺激を続けない。</p>
     <ol class="flow">
       <li class="aux">
         <span class="clock">0:00〜<br>3:00</span>
         <div class="step"><h4>自己紹介 ― 現場の話をひとつ</h4>
-        <p>名乗りは短く。その代わり、決済の現場で実際に遭遇した不正の話を1つだけ語る。「怖がらせない」宣言は1回だけ、短く。</p></div>
+        <p>名乗りは短く、決済の現場で実際に見た不正の話を1つ。「ここでしか聞けない話」を最初の3分に置く。</p></div>
       </li>
       <li>
-        <span class="clock">3:00〜<br>8:00</span>
-        <div class="step"><h4>1. 声クイズ ― どっちが本物の私？<span class="tag">体験①</span></h4>
-        <p>2つの「講師の声」を流し、挙手で投票。会場が割れる。<b>答えは最後まで明かさない。</b>「私の声ですらこれです。ではご家族の声なら？」で本編へ。</p></div>
+        <span class="clock">3:00〜<br>10:00</span>
+        <div class="step"><h4>1. いまの詐欺の主役は、AIではなかった【クイズの山】</h4>
+        <p>「お母さん、俺だけど」——何で本人と信じるか集めて板書。挙手クイズ「いま一番偽りやすいのは番号・顔・声のどれ？」→ 答えは番号。ニセ警察が被害額の7割。</p></div>
       </li>
       <li>
-        <span class="clock">8:00〜<br>13:00</span>
-        <div class="step"><h4>2. 38億円のニセ会議 ― ある経理担当者の朝</h4>
-        <p>香港の実事件を物語として語る。ビデオ会議の上司も同僚も、全員がディープフェイクだった。「騙されたのは、うっかり者ではなくプロ」。</p></div>
+        <span class="clock">10:00〜<br>19:00</span>
+        <div class="step"><h4>2. 「オオアリクイ」の謎 ― なぜ詐欺はバカっぽかったのか【笑いの山】</h4>
+        <p>伝説の迷惑メールで会場を笑わせてから、「あの荒唐無稽さには合理的な理由があった」と種明かし。手紙→メール→電話と続く詐欺の歴史の縦軸。</p></div>
       </li>
       <li>
-        <span class="clock">13:00〜<br>19:00</span>
-        <div class="step"><h4>3. あなたは何で「本人」と信じますか<span class="tag">体験②</span></h4>
-        <p>「お母さん、俺だけど」——何で本人と判断するか会場から集めて板書。挙手クイズ「番号・顔・声で、いま一番偽りやすいのは？」→ 直感は「声」、答えは「番号」。2回目の"外れ"。</p></div>
+        <span class="clock">19:00〜<br>28:00</span>
+        <div class="step"><h4>3. AIで論理が反転する ― 賢い人ほど狙われる【物語の山】</h4>
+        <p>選別フィルタが要らなくなる機序を説明し、香港・38億円のニセ会議事件を「ある経理担当者の朝」として語る。騙されたのは疑うことが仕事のプロ。</p></div>
       </li>
       <li>
-        <span class="clock">19:00〜<br>26:00</span>
-        <div class="step"><h4>4. いまの詐欺 ― 主役はAIではなかった</h4>
-        <p>2025年の被害は過去最悪（約3,257億円）。主役はニセ警察＋番号偽装で被害額の7割。日本にAI音声詐欺の統計が無いのは「起きていない」ではなく「まだ見えていない」。</p></div>
+        <span class="clock">28:00〜<br>40:00</span>
+        <div class="step"><h4>4. 実演 ― 「本人らしさ」は作られる【体験の山】</h4>
+        <p>最新AIと会場で生対話。聴衆の一言で話し方が変わる瞬間を体感。講師本人のクローン音声も再生。なりすまし依頼をAIが断る場面を見せ、「断らない側の声」を想像させる。</p></div>
       </li>
       <li>
-        <span class="clock">26:00〜<br>35:00</span>
-        <div class="step"><h4>5. これからのAI詐欺 ― 用心深い人ほど狙われる</h4>
-        <p>手作業だった「調べる・作る・応対する」をAIが肩代わりし、あなた専用の嘘が安く大量に作れるように。顔と声のカードが裏返る。</p></div>
-      </li>
-      <li>
-        <span class="clock">35:00〜<br>44:00</span>
-        <div class="step"><h4>6. 実演（山場）― 顔クイズとライブAI対話<span class="tag">体験③</span></h4>
-        <p>本物の写真とAI生成の顔を当てるクイズ（即答え合わせ、正答率はほぼ偶然）。続けて最新AIと生対話し、こちらに合わせて話し方が変わる様子を体感。なりすまし依頼をAIが断る場面まで見せ、「断らない側の声」を想像させる。</p></div>
-      </li>
-      <li>
-        <span class="clock">44:00〜<br>49:00</span>
-        <div class="step"><h4>7. 種明かしと結論 ― 見分けるのをやめる</h4>
-        <p>冒頭の声クイズの答え合わせ＝今日一番の驚き。「見分ける土俵を降りる」結論と、身を守る3つの手順。</p></div>
+        <span class="clock">40:00〜<br>49:00</span>
+        <div class="step"><h4>5. 結論 ― 見分けるのをやめる＋5つの回収【結論の山】</h4>
+        <p>見分ける土俵を降り、3つの手順を渡す。最後に山を5つ、一言ずつ順に回収して「全部つながっていた」で締める。</p></div>
       </li>
       <li class="aux">
         <span class="clock">49:00〜<br>55:00</span>
@@ -237,98 +216,91 @@
 
   <section>
     <h2>各パートの内容（詳細）</h2>
-    <p class="sub">進行を小さな区切りに分け、目安時間・講師の動き・語りかけの例（「」）を添えました。</p>
+    <p class="sub">各パート冒頭の帯が、その区間単体の「そうなんだ」。パート間の丸いラベルが接続詞（しかし／だから）です。</p>
 
     <!-- 自己紹介 -->
     <article class="mod">
       <div class="mod-head"><span class="num">0</span><h3>自己紹介 ― なぜ私たちがこの話をするのか</h3><span class="dur">3分</span></div>
       <ul class="beats">
-        <li class="beat"><span class="time">0.5分</span><div class="body"><b>名乗りと所属（短く）</b><p>講師の名前と、フィンテック企業（お金・決済の安全を日々あつかう会社）としての立場を一言で。<span class="say">私たちは、みなさんのお金が安全に動くしくみを、毎日ささえている会社です</span></p></div></li>
-        <li class="beat"><span class="time">2分</span><div class="body"><b>現場の話をひとつ（ここが名刺代わり）</b><p>決済の現場で実際に見た不正・なりすましの実例を1つだけ、固有名詞を伏せて語る。<span class="say">先日も、決済の現場でこんなことがありました——</span><span class="note"><b>準備:</b> 社内で共有できる実例を1つ選んで固有情報を除去しておく（コンプラ確認込み）。どうしても出せない場合は業界で公知の事例に差し替えるが、「現場から」の一人称は維持する。この2分が「ここでしか聞けない話」の担保になる。</span></p></div></li>
-        <li class="beat"><span class="time">0.5分</span><div class="body"><b>今日のねらい（1回だけ・短く）</b><p><span class="say">今日は怖い話もしますが、目的は一つ。最後に、どんな偽物にも効く守り方を一つだけ、持って帰っていただくことです</span><span class="note">「怖がらせるためではなく」の保証はここでの1回に留める。繰り返すと緊張感ごと抜ける。</span></p></div></li>
+        <li class="beat"><span class="time">0.5分</span><div class="body"><b>名乗りと所属（短く）</b><p><span class="say">私たちは、みなさんのお金が安全に動くしくみを、毎日ささえている会社です</span>（会社名・肩書きはここに）。</p></div></li>
+        <li class="beat"><span class="time">2分</span><div class="body"><b>現場の話をひとつ（名刺代わり）</b><p>決済の現場で実際に見た不正・なりすましの実例を1つ、固有情報を伏せて語る。<span class="note"><b>準備:</b> 社内で共有できる実例を1つ選びコンプラ確認。出せなければ業界公知の事例に差し替えるが「現場から」の一人称は維持。</span></p></div></li>
+        <li class="beat"><span class="time">0.5分</span><div class="body"><b>今日のねらい（1回だけ・短く）</b><p><span class="say">今日は怖い話もしますが、目的は一つ。最後に、どんな偽物にも効く守り方を一つだけ持って帰っていただくことです</span><span class="note">「怖がらせるためではなく」の保証はこの1回に留める。繰り返すと緊張感ごと抜ける。</span></p></div></li>
       </ul>
     </article>
 
     <!-- Part 1 -->
     <article class="mod">
-      <div class="mod-head"><span class="num">1</span><h3>声クイズ ― どっちが、本物の私でしょう？</h3><span class="dur">5分</span></div>
+      <div class="mod-head"><span class="num">1</span><h3>いまの詐欺の主役は、AIではなかった</h3><span class="dur">7分</span></div>
+      <p class="aha"><b>この区間のそうなんだ：</b>いま効いているのはAIの声ではなく、「つい信じてしまう番号」＋「逆らいにくい肩書き（警察）」。</p>
       <ul class="beats">
-        <li class="beat"><span class="time">1分</span><div class="body"><b>予告</b><p><span class="say">これから、短い音声を2つ流します。片方は本物の私。もう片方は、AIで作った私の声です。どちらが本物か、あとで手を挙げていただきます。よーく聴いてください</span> 会場を静かにさせ、音量を確認してから再生。</p></div></li>
-        <li class="beat"><span class="time">2分</span><div class="body"><b>再生と投票</b><p>音声A・音声B（各20〜30秒、同じ原稿）を順に再生。<span class="say">Aが本物だと思う方？　Bだと思う方？</span> 挙手を数え、割れ具合を口に出す。<span class="say">……ほぼ半々ですね。</span><span class="note"><b>素材:</b> 講師本人の声のクローンを事前作成（本人の声・本人同意なので倫理制約はクリア。生成物には「AI生成」を明記して管理）。会場再生用にファイル書き出し＋バックアップ音源を必ず用意。</span></p></div></li>
-        <li class="beat"><span class="time">1分</span><div class="body"><b>答えは保留する</b><p><span class="say">答えを言いたいところですが——今日の一番最後に発表します。いま覚えておいてほしいのは、答えではなく、<b>この会場が割れた</b>という事実です</span> スクリーンに「答えは 44分後」と表示して先へ。</p></div></li>
-        <li class="beat"><span class="time">1分</span><div class="body"><b>本編へのブリッジ</b><p><span class="say">毎日いっしょに働いている同僚でも、いま見分けられませんでした。私の声ですらこれです。では、離れて暮らすご家族の声だったら、どうでしょうか。今日はこの話です</span></p></div></li>
+        <li class="beat"><span class="time">2分</span><div class="body"><b>導入の問いと板書</b><p><span class="say">「お母さん、俺だけど」——こう電話が来たら、本人だと何で判断しますか？</span> 声・話し方・内容・雰囲気・番号など、出た答えを板書。<span class="say">この紙、最後にもう一度使います</span></p></div></li>
+        <li class="beat"><span class="time">1.5分</span><div class="body"><b>挙手クイズ</b><p><span class="say">では問題。番号・顔・声——今この瞬間、いちばん簡単に偽れるのはどれ？</span> 直感は「声」に集まる。<span class="say">実は——番号です。AIよりずっと手前で、もう破られています</span></p></div></li>
+        <li class="beat"><span class="time">2.5分</span><div class="body"><b>数字で裏づけ</b><p>着信画面「○○警察署」を大きく映す。<span class="say">2025年、日本の詐欺被害は過去最悪の約3,257億円。押し上げたのは"ニセ警察詐欺"で約1,005億円、特殊詐欺の約7割。犯行電話は「＋」で始まる国際電話が最多、末尾「0110」で警察署を装います</span><span class="note">出典：警察庁 令和7年統計（脚注）。数字は講演直前に最新値を再確認。</span></p></div></li>
+        <li class="beat"><span class="time">1分</span><div class="body"><b>この山の締め（単体で完結させる）</b><p><span class="say">今日これだけ覚えて帰っても十分です——「警察署の番号表示は、本人確認になりません」</span></p></div></li>
       </ul>
     </article>
+
+    <div class="conn"><span>しかし——昔の詐欺は、なぜあんなにバカっぽかったのか？</span></div>
 
     <!-- Part 2 -->
     <article class="mod">
-      <div class="mod-head"><span class="num">2</span><h3>38億円のニセ会議 ― ある経理担当者の朝</h3><span class="dur">5分</span></div>
+      <div class="mod-head"><span class="num">2</span><h3>「オオアリクイ」の謎 ― バレバレの嘘の合理的な理由</h3><span class="dur">9分</span></div>
+      <p class="aha"><b>この区間のそうなんだ：</b>わざとアホな文面は失敗作ではなく、「疑わない人だけを選び出す」ためのフィルタだった。</p>
       <ul class="beats">
-        <li class="beat"><span class="time">3分</span><div class="body"><b>物語として語る（数字は最後まで出さない）</b><p><span class="say">香港の、ある会社の経理担当者の話です。ある朝、本社の財務責任者から「極秘の案件がある」とメールが来ました。怪しいと思った。当然です、プロですから。ところが後日、ビデオ会議に呼ばれると——画面の向こうには、その財務責任者がいた。よく知る同僚たちもいた。顔も、声も、話し方も、いつも通り。彼は指示に従って、送金しました。15回に分けて</span> 一拍おく。<span class="say">会議に映っていた人間は、本人以外、全員ニセモノでした。ディープフェイクです。被害は約38億円</span></p></div></li>
-        <li class="beat"><span class="time">1分</span><div class="body"><b>意味づけ</b><p><span class="say">騙されたのは、うっかり者ではありません。疑うことが仕事の経理のプロが、一度疑ったのに、です。「顔と声が揃った相手」を疑い続けられる人は、ほとんどいません</span></p></div></li>
-        <li class="beat"><span class="time">1分</span><div class="body"><b>日本への引き寄せ</b><p><span class="say">これは海外の会社の話、と思われたかもしれません。でも使われた道具は、顔と声の偽物です。それが家庭の電話に届いたら？——その前にまず、いま日本で本当に起きていることから確認しましょう</span><span class="note">出典はCNN・香港警察発表（脚注リンク）。手口の再現手順には触れず、「何が起きたか」だけを語る。</span></p></div></li>
+        <li class="beat"><span class="time">2分</span><div class="body"><b>笑いから入る</b><p>スクリーンに実物の文面。<span class="say">「主人がオオアリクイに殺されて1年が過ぎました」——20年ほど前、実際に出回った迷惑メールです。ナイジェリアの王子から「あなたに莫大な遺産を」というメールを受け取った方も、いらっしゃるかもしれません</span> ひと笑い起きるのを待つ。</p></div></li>
+        <li class="beat"><span class="time">1.5分</span><div class="body"><b>謎を立てる</b><p><span class="say">ここで不思議に思いませんか。騙すのが目的なら、もっと上手な嘘を書けばいい。なぜプロの詐欺師が、誰が見てもバレる嘘を送ったのか。——実は、ゾッとするほど合理的な理由があります</span></p></div></li>
+        <li class="beat"><span class="time">3分</span><div class="body"><b>種明かし：選別フィルタ</b><p><span class="say">詐欺で一番コストがかかるのは、メールを送ることではなく、その後の「人間によるやり取り」です。だから途中で疑う人に手間をかけたら赤字になる。あのバカバカしい文面は、"それでも信じてしまう、いちばん疑わない人"だけが返信してくるように作られた選別装置なんです。賢い人は最初の一通で外れてくれる——それが狙いでした</span><span class="note">出典：Microsoft Research, C. Herley「Why do Nigerian Scammers Say They are from Nigeria?」(2012)。手口の再現方法ではなく、公開研究にある「仕組みの説明」に留める。</span></p></div></li>
+        <li class="beat"><span class="time">1.5分</span><div class="body"><b>歴史の縦軸を一気に</b><p><span class="say">この商売は昔からあります。19世紀は手紙で「スペインの囚人を救出したら財産を分ける」。2000年代はメールでナイジェリアの王子。2020年代は電話の番号偽装とニセ警察。道具は変わっても、構造はずっと「大量にばらまいて、引っかかる人を待つ」でした</span></p></div></li>
+        <li class="beat"><span class="time">1分</span><div class="body"><b>この山の締め</b><p><span class="say">つまり今までの詐欺は、疑い深い人・しっかりした人は、仕組みの上で最初から相手にされていなかったんです。「自分は引っかからない」——それは正しかった。今までは</span></p></div></li>
       </ul>
     </article>
+
+    <div class="conn"><span>だから——AIで手間がゼロになると、この論理は反転する</span></div>
 
     <!-- Part 3 -->
     <article class="mod">
-      <div class="mod-head"><span class="num">3</span><h3>あなたは何で「本人」と信じますか</h3><span class="dur">6分</span></div>
+      <div class="mod-head"><span class="num">3</span><h3>AIで論理が反転する ― 賢い人ほど狙われる</h3><span class="dur">9分</span></div>
+      <p class="aha"><b>この区間のそうなんだ：</b>「疑わない人を選ぶ」必要が消えると、狙う価値があるのは資産と信用が外から見える「しっかりした人」になる。</p>
       <ul class="beats">
-        <li class="beat"><span class="time">1.5分</span><div class="body"><b>導入の問い</b><p>前に出て問いかける。<span class="say">「お母さん、俺だけど」——こう電話が来たら、本人だと何で判断しますか？</span> 何人かに答えてもらう。声・話し方・話の内容・雰囲気・番号など、出たものを板書やスライドに書き出す。<span class="say">どれも、本人だと見分けるための"手がかり"です。この紙、あとでもう一度使います</span></p></div></li>
-        <li class="beat"><span class="time">1.5分</span><div class="body"><b>挙手クイズ（2回目の"外れ"）</b><p><span class="say">では問題です。いま出た手がかりのうち、番号・顔・声——今この瞬間、いちばん簡単に偽れるのはどれだと思いますか？</span> 挙手。直感では「声」（さっきのクイズの流れで）に集まりやすい。<span class="say">実は——番号です。声のAIより、ずっと手前で、もう破られています</span></p></div></li>
-        <li class="beat"><span class="time">2分</span><div class="body"><b>足元が崩れる一撃：番号</b><p>着信画面を大きく映す。<span class="say">この"○○警察署"という表示、信じますか？　いまの詐欺の主役は、AIではなく、この"番号"なんです</span> 番号カードが裏返る演出。</p></div></li>
-        <li class="beat"><span class="time">1分</span><div class="body"><b>今日の地図</b><p><span class="say">今日はこの順で進みます。①いま、どの手がかりが破られているのか ②これから、何が破られるのか ③では、どう守るのか。そして最後に、冒頭のクイズの答え合わせです</span></p></div></li>
+        <li class="beat"><span class="time">2.5分</span><div class="body"><b>反転の機序</b><p>ゆっくり、順を追って。<span class="say">詐欺師の最大コストだった「人間によるやり取り」——相手を調べる、本物らしい文章や声をつくる、電話でうまく応対する——を、AIが肩代わりします。手間がゼロに近づくと、雑にばらまいて選別する必要がなくなり、一人ひとりに合わせた"精密な狙い撃ち"が安く大量にできる。だから、公開情報・資産・肩書き・家族構成が外から見える人ほど、狙う価値が出ます。バカな嘘は、もう来ません。あなた専用の、賢い嘘が来ます</span></p></div></li>
+        <li class="beat"><span class="time">3.5分</span><div class="body"><b>物語：38億円のニセ会議</b><p><span class="say">香港の、ある会社の経理担当者の話です。財務責任者から「極秘案件」のメールが来て、彼は疑った。当然です、プロですから。ところがビデオ会議に呼ばれると、画面の向こうにはその財務責任者がいて、よく知る同僚たちもいた。顔も声もいつも通り。彼は15回に分けて送金しました。——会議にいた人間は、本人以外、全員ニセモノでした。被害は約38億円</span> 一拍おく。<span class="say">騙されたのは、うっかり者ではありません。一度疑ったプロです</span><span class="note">出典：CNN・香港警察発表（脚注）。「何が起きたか」だけを語り、作り方には触れない。</span></p></div></li>
+        <li class="beat"><span class="time">2分</span><div class="body"><b>顔と声が抜かれる</b><p><span class="say">ディープフェイクは、映像の顔をその場で別人に変えられる段階に入っています。声も、ほんの少しの音声——他人が投稿した動画、会議の録画、留守番電話——から本人そっくりが作れる。自分が用心して声を出さなくても、材料は知らないうちに外に残っています</span></p></div></li>
+        <li class="beat"><span class="time">1分</span><div class="body"><b>この山の締め＋実演への引き</b><p><span class="say">「しっかりしているから大丈夫」は、これから守りになりません。——言葉だけでは信じにくいと思うので、ここからは実物をお見せします</span></p></div></li>
       </ul>
     </article>
+
+    <div class="conn"><span>しかし——「本人らしさ」で見分ければいいのでは？</span></div>
 
     <!-- Part 4 -->
     <article class="mod">
-      <div class="mod-head"><span class="num">4</span><h3>いまの詐欺 ― 主役はAIではなかった</h3><span class="dur">7分</span></div>
+      <div class="mod-head"><span class="num">4</span><h3>実演（山場）― 「本人らしさ」は作られる</h3><span class="dur">12分</span></div>
+      <p class="aha"><b>この区間のそうなんだ：</b>話し方も雰囲気も、相手がこちらに合わせて変えてくる。そして本物の脅威は「断らない声」。</p>
       <ul class="beats">
-        <li class="beat"><span class="time">2.5分</span><div class="body"><b>現状の主役を明かす</b><p><span class="say">2025年、日本の詐欺被害は過去最悪の約3,257億円。押し上げたのは"ニセ警察詐欺"で、被害額は約1,005億円、特殊詐欺の約7割です。中心は、発信番号を偽って"警察からの電話"に見せかける手口。実際、犯行電話は「＋」で始まる国際電話が最多で、末尾「0110」で警察署を装う例が目立ちます</span><span class="note">出典：警察庁 令和7年 特殊詐欺・SNS型投資/ロマンス詐欺 認知・検挙状況。ニセ警察詐欺 被害額1,005.0億円＝特殊詐欺被害額の70.6%（認知11,014件）。犯行利用番号は国際電話が75.5%。数字は講演直前に最新値を再確認。</span></p></div></li>
-        <li class="beat"><span class="time">1.5分</span><div class="body"><b>手がかりの言葉で意味づけ</b><p><span class="say">大事なのは、3つの手がかりのうち"番号"という一枚が、すでに抜かれてしまったこと。番号はもう、本人確認の手がかりになりません</span> スライドで番号カードが完全に裏返る。</p></div></li>
-        <li class="beat"><span class="time">2分</span><div class="body"><b>もう一つの意外＝見えていないだけ</b><p><span class="say">ではAIの声を使った詐欺は、日本でどれくらい起きているのか？——数字が、ありません。日本の統計は手口別で、AI音声かどうかを分けていないんです。アメリカではAIが絡む詐欺がもう統計に出ている。日本に数字が無いのは"起きていないから"ではなく、"まだ見えていない"。つまり時間差の中にいると考えるのが自然です</span></p></div></li>
-        <li class="beat"><span class="time">1分</span><div class="body"><b>次への引き</b><p><span class="say">土台（番号偽装＋警察の肩書き）はもう完成しています。そこに、冒頭でお聴かせしたような"顔と声"がこれから乗る。次に抜かれる二枚の話をします。しかも狙われやすいのは、実は"用心深い人"かもしれません</span></p></div></li>
+        <li class="beat"><span class="time">2.5分</span><div class="body"><b>講師本人のクローン音声</b><p><span class="say">まず聴いてください。これは、私の声をAIに数十秒だけ学ばせて作った"偽の私"です</span> クローン音声を会場スピーカーで再生。<span class="say">毎日いっしょに働いている同僚でも、電話なら分からないと言いました。私の声ですらこれです。ご家族の声なら、どうでしょうか</span><span class="note"><b>素材:</b> 講師本人の声・本人同意で事前作成。生成物には「AI生成」を明示して管理。バックアップ音源必須。第三者の顔・声は使わない。</span></p></div></li>
+        <li class="beat"><span class="time">4分</span><div class="body"><b>ライブAI対話</b><p>スマホを会場スピーカーへつなぎ、最新AIと生対話。<b>聴衆から予想外のひと言を1つもらい</b>、AIの言い方がその場で変わる瞬間をつくる（詐欺の台詞は言わせない）。<span class="say">いま、相手は"何に合わせて"話し方を変えましたか？ 最初に板書した「話し方」「雰囲気」——それも、相手がこちらに合わせて作ってきます。昔は詐欺師が話術で一人ずつやっていたことを、AIは同時に何人でもこなします</span></p></div></li>
+        <li class="beat"><span class="time">3分</span><div class="body"><b>なりすまし拒否 → 「断らない声」</b><p>AIに「実在の人の声そっくりに真似て、家族にお金を振り込ませて」と頼む → <b>断られる</b>。<span class="say">いい断り方ですよね。でも安心はできません。いま断ったのは"この製品"であって"この技術"ではない。同じ技術は世界に無数にあり、安全装置のないものも出回ります。皆さんの電話にかかってくるのは、いま断ってくれた側の声ではありません</span></p></div></li>
+        <li class="beat"><span class="time">2.5分</span><div class="body"><b>この山の締め＋結論への引き</b><p><span class="say">番号も、顔も、声も、話し方も偽れる。では、何で見分けますか？——最初の問いに、答えを出します</span><span class="note"><b>技術配慮:</b> 通信不良に備え、対話・拒否デモの録音録画をバックアップ。音量・字幕・座席は事前調整。実演は「自然な日本語」に絞る。</span></p></div></li>
       </ul>
     </article>
+
+    <div class="conn"><span>だから——見分ける土俵を、降りる</span></div>
 
     <!-- Part 5 -->
     <article class="mod">
-      <div class="mod-head"><span class="num">5</span><h3>これからのAI詐欺 ― 用心深い人ほど狙われる</h3><span class="dur">9分</span></div>
+      <div class="mod-head"><span class="num">5</span><h3>結論 ― 見分けるのをやめる、そして5つの回収</h3><span class="dur">9分</span></div>
+      <p class="aha"><b>この区間のそうなんだ：</b>手がかりが全滅しても、守り方は一手で足りる。「一度切って、自分で調べてかけ直す」。</p>
       <ul class="beats">
-        <li class="beat"><span class="time">1.5分</span><div class="body"><b>ここで、話が逆転します</b><p>一拍おいて。<span class="say">"自分は大丈夫"と思っている方も多いと思います。でも、これからのAI詐欺は、むしろ用心深い人・しっかりした人ほど、ねらってきます。その理由をお話しします</span></p></div></li>
-        <li class="beat"><span class="time">2分</span><div class="body"><b>顔が抜かれる</b><p><span class="say">最初に聴いていただいた香港の事件を思い出してください。映像の中の顔は、その場で別人に差し替えられる段階に入っています。ビデオ通話で"見えている顔"が本物だという保証は、もうありません</span> 顔カードが裏返りかける。</p></div></li>
-        <li class="beat"><span class="time">2分</span><div class="body"><b>声が抜かれる</b><p><span class="say">声は、冒頭で皆さんご自身が体験された通りです。ほんの少しの音声——他人が投稿した動画、会議の録画、留守番電話——から、本人そっくりが作れる。自分が用心して声を出さなくても、材料は知らないうちに外に残っています</span> 声カードも裏返りかける。</p></div></li>
-        <li class="beat"><span class="time">2.5分</span><div class="body"><b>今日いちばんの逆説：狙われる人が変わる</b><p>ゆっくり、順を追って。<span class="say">これまでの詐欺は、大量にばらまいて"たまたま引っかかる人"を待つやり方でした。一人ひとりに合わせた嘘を作るのは手作業で、手間もお金もかかったからです。AIはその手作業——相手を調べる、本物らしい声や文章をつくる、うまく応対する——を肩代わりします。手間がゼロに近づくと、これまで割に合わなかった"精密な狙い撃ち"が、安く大量にできる。だから、公開情報・資産・肩書き・家族構成が外から見える"しっかりした人"ほど、狙う価値が出ます。"しっかりしているから大丈夫"は、これから守りになりません</span></p></div></li>
-        <li class="beat"><span class="time">1分</span><div class="body"><b>近い将来の一場面（「話の内容」の回収）</b><p><span class="say">さきほど"話の内容で見分ける"と答えた方——その内容ごと、あなた専用に作られます。お子さんやお孫さんの顔と声で、あなたにしか通じない事情を持ち出して、ビデオ通話がかかってくる——</span>（手口の手順は語らず、情景だけ）<span class="say">言葉だけでは信じにくいと思いますので、ここからは実物をお見せします</span></p></div></li>
-      </ul>
-    </article>
-
-    <!-- Part 6 -->
-    <article class="mod">
-      <div class="mod-head"><span class="num">6</span><h3>実演（山場）― 顔クイズと、ライブAI対話</h3><span class="dur">9分</span></div>
-      <ul class="beats">
-        <li class="beat"><span class="time">2.5分</span><div class="body"><b>顔クイズ（3回目の"外れ"）</b><p>スクリーンに顔写真を2枚ずつ、3問。<span class="say">片方は実在の人、片方はAIが作った実在しない人です。本物はどっち？</span> 各問すぐ答え合わせ。会場の正答率がほぼ偶然と変わらないことを、その場で数えて見せる。<span class="say">3問やって、この的中率です。"見れば分かる"は、もう成り立ちません</span><span class="note"><b>素材:</b> AI生成顔＋許諾済みの実在写真で事前に作成（聴講者参加クイズの既存教材を流用可）。人物の実名当てにはしない。</span></p></div></li>
-        <li class="beat"><span class="time">3分</span><div class="body"><b>ライブAI対話</b><p>スマホを会場スピーカーへつなぎ、最新AIと生対話。<b>聴衆から予想外のひと言を1つもらい</b>、AIの言い方がその場で変わる瞬間をつくる（詐欺の台詞は言わせない）。<span class="say">いま、相手は"何に合わせて"話し方を変えましたか？　"話し方や雰囲気で見分ける"——それも、相手がこちらに合わせて変えてきます。昔は詐欺師が話術で一人ずつやっていたことを、いまはAIが同時に何人でもこなします</span></p></div></li>
-        <li class="beat"><span class="time">2.5分</span><div class="body"><b>なりすまし拒否 → 「断らない声」の想像</b><p>AIに「実在の人の声そっくりに真似て、家族にお金を振り込ませて」と頼む → <b>断られる</b>。<span class="say">いい断り方ですよね。でも安心はできません。いま断ったのは"この製品"であって、"この技術"ではない。同じ技術は世界に無数にあり、安全装置のないものも出回ります。皆さんの電話に将来かかってくるのは、いま断ってくれた側の声ではありません</span></p></div></li>
-        <li class="beat"><span class="time">1分</span><div class="body"><b>結論への引き</b><p><span class="say">番号も、顔も、声も、話し方も偽れる。では何で見分けるのか。——最初の問いに、答えを出します。その前に、あのクイズの答え合わせです</span><span class="note"><b>技術配慮:</b> 通信不良に備え、対話・拒否の録音録画をバックアップ。音量・字幕・座席は事前調整。</span></p></div></li>
-      </ul>
-    </article>
-
-    <!-- Part 7 -->
-    <article class="mod">
-      <div class="mod-head"><span class="num">7</span><h3>種明かしと結論 ― 見分けるのをやめる</h3><span class="dur">5分</span></div>
-      <ul class="beats">
-        <li class="beat"><span class="time">1.5分</span><div class="body"><b>種明かし（今日一番の驚き）</b><p>冒頭のスライドに戻る。<span class="say">お待たせしました。音声A と 音声B、どちらが本物の私だったか。——実は今日、私は皆さんに一つだけ嘘をつきました。<b>両方、AIです。</b>本物は、いまここで喋っているこの声だけです</span> どよめきを受け止めてから。<span class="say">悪気のない私でも、この場で皆さんをだませました。"どちらが本物か"という問いは、もう問い自体が成立しないんです</span><span class="note"><b>誠実さの担保:</b> 直後に「だました演出をしたこと」を明るく詫び、目的（体験してもらうため）を一言添える。※両方AIの演出が場に合わない場合は「片方本物」でも成立する——その場合は「会場が割れた」事実を種明かしの核にする。</span></p></div></li>
-        <li class="beat"><span class="time">2.5分</span><div class="body"><b>結論＝見分ける土俵を降りる／3つの手順</b><p>板書した手がかりの紙をもう一度見せる。<span class="say">最初に集めた手がかり——声、話し方、内容、雰囲気、番号。今日、全部裏切られましたね。だったら、手がかりで見分けること自体を、やめればいい。見分ける勝負は、完璧な偽物を作れる側が必ず勝ちます。守り方は3つ。①お金・警察・口座の電話は、いったん切る ②かけ直す番号は、着信履歴からでなく自分で公式に調べる ③送金・口座・暗証番号は、電話ではその場で決めない。この"一度切って、自分で調べてかけ直す"だけは、番号が本物でも声が本物でも効きます</span></p></div></li>
-        <li class="beat"><span class="time">1分</span><div class="body"><b>締め</b><p><span class="say">番号・顔・声が、一つずつ偽物に置き換えられていく——それがこれから起きることです。だから"見分ける競争"は降りましょう。私たちの土俵はひとつ。お金と権威の電話は、一度切って、自分で調べてかけ直す。今日のクイズの話を、ぜひご家族にしてください。「私、AIの声に手を挙げちゃったのよ」——その一言が、ご家族を守る最初の一歩になります</span></p></div></li>
+        <li class="beat"><span class="time">2分</span><div class="body"><b>最初の問いに戻る</b><p>板書した手がかりの紙を再び見せる。<span class="say">最初に集めました——声、話し方、内容、雰囲気、番号。今日、全部裏切られましたね。だったら、手がかりで見分けること自体をやめればいい。見分ける勝負は、完璧な偽物を作れる側が必ず勝ちます</span></p></div></li>
+        <li class="beat"><span class="time">3分</span><div class="body"><b>身を守る3つの手順</b><p><span class="say">守り方は3つ。①お金・警察・口座の電話は、いったん切る ②かけ直す番号は、着信履歴からでなく自分で公式に調べる ③送金・口座・暗証番号は、電話ではその場で決めない。この"一度切って、自分で調べてかけ直す"だけは、番号が本物でも、声が本物でも、相手がAIでも人間でも——効きます</span></p></div></li>
+        <li class="beat"><span class="time">2.5分</span><div class="body"><b>5つの回収（まとまりはここで作る）</b><p>スライドに山を5つ並べ、一言ずつ指差しながら。<span class="say">今日の話を1分で巻き戻します。——いまの主役はAIではなく番号でした。昔の詐欺がバカっぽかったのは、疑わない人を選ぶフィルタでした。AIで手間が消えると、その論理が反転して、しっかりした人ほど狙われる。そして"本人らしさ"は、相手がこちらに合わせて作ってくる。だから私たちは、見分けるのをやめて、一度切って、自分で調べてかけ直す。——全部、一本の線でつながっています</span></p></div></li>
+        <li class="beat"><span class="time">1.5分</span><div class="body"><b>締め</b><p><span class="say">帰ったらぜひ、ご家族に「オオアリクイ」の話をしてください。笑い話として話せて、そのまま家族を守る話になります。手口は来月も変わりますが、この5つの線と3つの手順は変わりません</span></p></div></li>
       </ul>
     </article>
   </section>
 
   <section>
     <h2>だまされないための具体策（一次資料で確認済み）</h2>
-    <p class="sub">この一覧は、警察庁（SOS47）・政府広報・都道府県警、および米国FTC（連邦取引委員会）の公表アドバイスを確認して作成しました。講演の後半（パート7）とお土産の資料で、この中から要点を絞ってお伝えします。</p>
+    <p class="sub">この一覧は、警察庁（SOS47）・政府広報・都道府県警、および米国FTC（連邦取引委員会）の公表アドバイスを確認して作成しました。講演の結論パートとお土産の資料で、この中から要点を絞ってお伝えします。</p>
     <ul class="list check">
       <li><b>お金・警察・口座の電話は、いったん切ってよい。</b>「一度切って、折り返します」と言って切って構いません。本物の警察はそれを嫌がりません。<span class="note">警察庁 SOS47／政府広報。</span></li>
       <li><b>折り返しは"かかってきた番号"にかけない。</b>自分で調べた番号にかけ直す。警察なら最寄りの警察署か、警察相談専用ダイヤル<b>「#9110」</b>。家族なら、着信履歴ではなく、元から知っている本人の番号へ。<span class="note">警察庁／FTC（"番号は、かけてきた相手が教える番号でも、検索で出た番号でもなく、元から持っている番号を使う"）。</span></li>
@@ -344,29 +316,28 @@
     <h2>運営上の配慮</h2>
     <p class="sub">フィンテック企業として、正確さ・安全・分かりやすさに配慮して設計しています。</p>
     <ul class="list check">
-      <li><b>実演・クイズの素材は「講師本人の声」と「同意済み・許諾済みの素材」のみ。</b>クローン音声は講師本人が自分の声で作成し、生成物には「AI生成」を明示して管理。第三者の顔・声は使いません。これ自体を運営の教育ポイントとして一言添えます。</li>
-      <li><b>手口の"やり方"は教えません。</b>物語・実演とも、作成手順やだましの台詞は扱わず、「何が起きたか」と「守り方」だけを話します。</li>
-      <li><b>種明かし演出の誠実さ。</b>冒頭クイズの「両方AI」演出は、種明かし直後にお詫びと目的説明をセットにし、笑いに変えて回収します。場に合わなければ「片方本物」構成に差し替え可能。</li>
+      <li><b>実演の素材は「講師本人の声」と「同意済み・許諾済みの素材」のみ。</b>クローン音声は講師本人の声で作成し、生成物には「AI生成」を明示して管理。第三者の顔・声は使いません。これ自体を教育ポイントとして一言添えます。</li>
+      <li><b>手口の"やり方"は教えません。</b>オオアリクイの話も「なぜバカっぽいのか」という公開研究の仕組み解説に留め、文面の作り方・送金手順・だましの台詞は扱いません。</li>
       <li><b>数字は一次資料で最終確認。</b>被害額や割合は公表資料に基づき、講演直前に最新値を確認。スライドには出典・年度・「認知件数ベース（表面化分）」を明記します。</li>
-      <li><b>実演のバックアップを用意。</b>通信不良に備え、クイズ音源・対話・拒否デモの録音録画を準備。ライブが不調でも進行できます。</li>
-      <li><b>シニアへの配慮。</b>実演は速さや専門性でなく「自然な日本語」に絞り、音量・字幕・座席を事前に調整します。クイズの挙手は強制しません。</li>
+      <li><b>実演のバックアップを用意。</b>通信不良に備え、クローン音声・対話・拒否デモの録音録画を準備。ライブが不調でも進行できます。</li>
+      <li><b>シニアへの配慮。</b>実演は速さや専門性でなく「自然な日本語」に絞り、音量・字幕・座席を事前に調整。挙手は強制しません。</li>
     </ul>
   </section>
 
   <footer>
-    <p><b>この講演の芯：</b>「見破る力」を鍛えるのではなく、見破りに3回失敗する体験を通じて、「見破らなくても守れる方法（一度切って、自分で調べてかけ直す）」を持ち帰っていただきます。</p>
+    <p><b>この講演の芯：</b>単体で面白い「そうなんだ」を5つ置き、最後に一本の線で回収する。持ち帰りは「見破らなくても守れる方法（一度切って、自分で調べてかけ直す）」。</p>
     <p style="margin-top:14px"><b>主な出典（2026年7月時点で確認・すべてURLつき）：</b></p>
     <ul style="margin:6px 0 0;padding-left:1.2em;line-height:1.9">
-      <li>CNN「Finance worker pays out $25 million after video call with deepfake 'chief financial officer'」（香港・約38億円のニセ会議事件）<br>
-      <a href="https://edition.cnn.com/2024/02/04/asia/deepfake-cfo-scam-hong-kong-intl-hnk/index.html">https://edition.cnn.com/2024/02/04/asia/deepfake-cfo-scam-hong-kong-intl-hnk/index.html</a><br>
-      <span style="font-size:.8rem">被害額 2億香港ドル（約2,560万米ドル）／ビデオ会議の参加者は本人以外すべてディープフェイク／15回に分けて送金。円換算は概算。</span></li>
       <li>警察庁「令和7年における特殊詐欺及びSNS型投資・ロマンス詐欺の認知・検挙状況等について」<br>
       <a href="https://www.npa.go.jp/bureau/criminal/souni/tokusyusagi/sagi_keihatsu2025.pdf">https://www.npa.go.jp/bureau/criminal/souni/tokusyusagi/sagi_keihatsu2025.pdf</a><br>
       <span style="font-size:.8rem">被害総額 約3,257.4億円／特殊詐欺 約1,423.1億円（前年比+98.0%）／ニセ警察詐欺 被害額1,005.0億円＝特殊詐欺の70.6%（認知11,014件）／犯行利用番号は国際電話75.5%</span></li>
+      <li>Cormac Herley（Microsoft Research）「Why do Nigerian Scammers Say They are from Nigeria?」WEIS 2012（"バカっぽい嘘＝被害者選別フィルタ"の原典）<br>
+      <a href="https://www.microsoft.com/en-us/research/publication/why-do-nigerian-scammers-say-they-are-from-nigeria/">https://www.microsoft.com/en-us/research/publication/why-do-nigerian-scammers-say-they-are-from-nigeria/</a></li>
+      <li>CNN「Finance worker pays out $25 million after video call with deepfake 'chief financial officer'」（香港・約38億円のニセ会議事件）<br>
+      <a href="https://edition.cnn.com/2024/02/04/asia/deepfake-cfo-scam-hong-kong-intl-hnk/index.html">https://edition.cnn.com/2024/02/04/asia/deepfake-cfo-scam-hong-kong-intl-hnk/index.html</a><br>
+      <span style="font-size:.8rem">被害額 2億香港ドル（約2,560万米ドル）／会議の参加者は本人以外すべてディープフェイク／15回に分けて送金。円換算は概算。</span></li>
       <li>nippon.com「2025年の特殊詐欺：全国で被害1400億円 前年から倍増、ニセ警察詐欺が顕著」<br>
       <a href="https://www.nippon.com/ja/japan-data/h02795/">https://www.nippon.com/ja/japan-data/h02795/</a></li>
-      <li>時事通信「SNS型投資、ロマンス詐欺被害が過去最悪 『ニセ警察』急増、AI活用で手口巧妙化も」<br>
-      <a href="https://www.jiji.com/jc/article?k=2026021200462&g=soc">https://www.jiji.com/jc/article?k=2026021200462&g=soc</a></li>
       <li>警察庁 SOS47「ニセ警察詐欺に注意！」（一度切って自分で調べた番号へ／警察相談#9110／国際電話・末尾0110注意／"誰にも言うな"は詐欺）<br>
       <a href="https://www.npa.go.jp/bureau/safetylife/sos47/new-topics/241218/02.html">https://www.npa.go.jp/bureau/safetylife/sos47/new-topics/241218/02.html</a></li>
       <li>政府広報オンライン「撲滅ニセ警察詐欺。"#みんとめ"であなたのお金を守ろう！」<br>
