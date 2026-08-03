@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>巧妙化するAI詐欺から身を守る ― スライド(全31枚)</title>
+<meta name="description" content="シニア向け60分セミナー「巧妙化するAI詐欺から身を守る」の投影スライド全31枚。各スライドに台本・発表者ノートつき。">
+<style>
+:root{
+  --bg:#eef0f3; --panel:#ffffff; --ink:#20242c; --muted:#5c6472;
+  --line:#d9dce2; --line-soft:#e7e9ee; --chip:#f1f2f5;
+  --accent:#b9791f; --accent-soft:#f3e6cf;
+  --shadow:0 1px 2px rgba(20,24,34,.06),0 8px 24px -16px rgba(20,24,34,.25);
+  --serif:"Hiragino Mincho ProN","Yu Mincho","YuMincho",serif;
+  --sans:"Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Noto Sans JP",system-ui,sans-serif;
+  --mono:ui-monospace,"SFMono-Regular","Consolas",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#14171d; --panel:#1c2029; --ink:#e9ebef; --muted:#9aa3b2;
+    --line:#2b3038; --line-soft:#242932; --chip:#242a33;
+    --accent:#e0a63e; --accent-soft:#3a2f18;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -18px rgba(0,0,0,.7);
+  }
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);
+  line-height:1.8;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:clamp(18px,4vw,44px) clamp(12px,3vw,28px) 96px}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- ページヘッダー ---------- */
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.45rem,4.2vw,2.2rem);
+  line-height:1.35;margin:0 0 16px;text-wrap:balance;letter-spacing:.01em}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:0}
+.btn{display:inline-block;font-size:.88rem;text-decoration:none;color:var(--ink);
+  background:var(--panel);border:1px solid var(--line);border-radius:999px;
+  padding:7px 16px;box-shadow:var(--shadow)}
+.btn:hover{background:var(--accent-soft)}
+.btn.primary{border-color:var(--accent);color:var(--accent);font-weight:600}
+.hint{font-size:.85rem;color:var(--muted);margin:14px 0 0}
+
+/* ---------- 目次 ---------- */
+.toc{margin:32px 0 40px;background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;box-shadow:var(--shadow);padding:18px clamp(14px,3vw,24px)}
+.toc h2{font-family:var(--serif);font-size:1.08rem;font-weight:600;margin:0 0 14px}
+.toc-groups{display:grid;gap:16px}
+.toc-part{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
+  color:var(--accent);margin:0 0 7px}
+.toc ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.toc li a{display:inline-flex;align-items:baseline;gap:7px;max-width:100%;
+  font-size:.84rem;line-height:1.5;text-decoration:none;color:var(--ink);
+  background:var(--chip);border-radius:8px;padding:5px 11px}
+.toc li a:hover{background:var(--accent-soft)}
+.toc .num{font-family:var(--mono);font-size:.72rem;font-weight:700;color:var(--accent);
+  font-variant-numeric:tabular-nums}
+
+/* ---------- スライドカード ---------- */
+.deck{display:grid;gap:34px}
+.slide{scroll-margin-top:16px}
+
+/* スライド内部は「スクリーン投影の再現」として常にライト配色（ダークモードでも変えない）。
+   --pt は 1pt 相当の長さ。1pt = 13.333in カード幅の 0.10417%。 */
+.stage{
+  --s-bg:#ffffff; --s-ink:#20242c; --s-muted:#5c6472; --s-dim:#5c6472;
+  --s-accent:#b9791f; --s-danger:#a83b3b; --s-emph:#f3e6cf; --s-rule:#e6e1d6;
+  --pt:max(0.10417cqw,0.7px);
+  container-type:inline-size;
+  position:relative;
+  aspect-ratio:16 / 9;
+  display:flex;flex-direction:column;
+  background:var(--s-bg);color:var(--s-ink);
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.stage.t-section{--s-bg:#20242c;--s-ink:#ffffff;--s-muted:#bcbdc0;--s-dim:#9aa3b2}
+/* --size は pptx と同じ pt 値。カード幅に比例して拡縮する。 */
+.fz{font-size:calc(var(--pt) * var(--size))}
+
+.pageno{position:absolute;z-index:2;top:calc(var(--pt) * 12);right:calc(var(--pt) * 16);
+  font-family:var(--mono);color:var(--s-dim);letter-spacing:.06em;line-height:1;
+  font-variant-numeric:tabular-nums}
+.body{flex:1;min-height:0;display:flex;flex-direction:column;
+  padding:max(3.375%,14px) max(5.625%,16px) max(5.6%,18px)}
+.body>p{margin:0}
+
+.head{display:flex;align-items:flex-end;min-height:calc(var(--pt) * 76);
+  padding-right:max(9%,46px)}
+.title{margin:0;font-weight:700;color:var(--s-accent);line-height:1.25;letter-spacing:.01em}
+.rule{flex:none;width:19.5%;height:calc(var(--pt) * 4);margin-top:calc(var(--pt) * 7);
+  background:var(--s-accent);border-radius:1px}
+/* bullets/sources は pptx と同じく上詰め、stat/steps は上下中央（.center）。 */
+.content{flex:1;min-height:0;margin-top:calc(var(--pt) * 10);
+  display:flex;flex-direction:column;justify-content:flex-start}
+.content.center{justify-content:center}
+.s-footer{margin-top:auto;padding-top:calc(var(--pt) * 8);
+  color:var(--s-muted);line-height:1.4}
+.s-footer.center{text-align:center}
+
+/* cover / big：游明朝の大文字中央 */
+.cover,.bigwrap{flex:1;display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center}
+.cover{gap:calc(var(--pt) * 22)}
+.bigwrap{gap:calc(var(--pt) * 18)}
+.c-title,.big{margin:0;font-family:var(--serif);font-weight:700;line-height:1.3;
+  letter-spacing:.01em;text-wrap:balance}
+.big{line-height:1.28}
+.c-sub{margin:0;color:var(--s-accent);line-height:1.4}
+.big-sub{margin:0;color:var(--s-muted);line-height:1.35}
+
+/* warn：#a83b3b の白文字帯（フルブリード） */
+.warn{flex:none;min-height:calc(var(--pt) * 76);padding:calc(var(--pt) * 12) 6%;
+  background:var(--s-danger);color:#fff;font-weight:700;line-height:1.35;
+  display:flex;align-items:center;justify-content:center;text-align:center}
+
+/* section：濃色背景＋白文字＋アクセント kicker */
+.kicker{margin:0;font-weight:700;color:var(--s-accent);line-height:1.3;letter-spacing:.08em}
+.sec-body{flex:1;display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;gap:calc(var(--pt) * 16)}
+.sec-title{margin:0;font-weight:700;color:var(--s-ink);line-height:1.3;letter-spacing:.02em}
+.sec-sub{margin:0;color:var(--s-muted);line-height:1.4}
+
+/* bullets / sources：「・」つきぶら下げリスト */
+.bul{list-style:none;margin:0;padding:0;display:grid}
+.bul li{position:relative;padding-left:1em;line-height:1.35;color:var(--s-ink)}
+.bul li::before{content:"\30FB";position:absolute;left:0;top:0}
+
+/* emphasis：#f3e6cf のボックス */
+.emph{flex:none;margin:calc(var(--pt) * 13) 0 0;min-height:calc(var(--pt) * 61);
+  padding:calc(var(--pt) * 8) 3%;background:var(--s-emph);color:var(--s-ink);
+  border-radius:calc(var(--pt) * 10);font-weight:700;line-height:1.35;
+  display:flex;align-items:center;justify-content:center;text-align:center}
+.emph.danger{color:var(--s-danger)}
+
+/* stat：ラベル＋太字値 */
+.stat{display:grid}
+.stat-row{display:grid;grid-template-columns:31.3% 1fr;column-gap:2.5%;
+  align-items:baseline;padding:calc(var(--pt) * 9) 0;border-bottom:1px solid var(--s-rule)}
+.stat-row:last-child{border-bottom:0}
+.stat-lab{margin:0;color:var(--s-muted);line-height:1.25}
+.stat-val{margin:0;font-weight:700;line-height:1.2}
+.stat-val .acc{color:var(--s-accent)}
+
+/* steps：帯ラベル＋主文＋補足 */
+.steps{display:grid;row-gap:calc(var(--pt) * 14);align-items:baseline}
+.steps.wide{grid-template-columns:36.3% 1fr;column-gap:2.5%}
+.steps.narrow{grid-template-columns:6.8% 1fr;column-gap:.9%}
+.steps .lab{margin:0;color:var(--s-accent);font-weight:700;line-height:1.15}
+.steps.narrow .lab{text-align:right}
+.steps .main{margin:0;font-weight:700;color:var(--s-ink);line-height:1.2}
+.steps .note{margin:calc(var(--pt) * 4) 0 0;color:var(--s-muted);line-height:1.3}
+
+/* ---------- カード下（part ラベル＋発表者ノート） ---------- */
+.under{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.part{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;color:var(--muted)}
+details{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  box-shadow:var(--shadow)}
+summary{cursor:pointer;list-style:none;padding:10px 15px;
+  font-size:.87rem;font-weight:600;color:var(--muted)}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"\25B8";margin-right:8px;color:var(--accent)}
+details[open] summary::before{content:"\25BE"}
+details[open] summary{border-bottom:1px solid var(--line-soft)}
+.notes{margin:0;padding:13px 16px 17px;font-size:.9rem;line-height:1.9;
+  color:var(--ink);overflow-wrap:anywhere}
+
+footer.page{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:.82rem;color:var(--muted)}
+footer.page p{margin:0 0 6px}
+
+/* ---------- 狭い画面：16:9 を解除して縦に伸ばす ---------- */
+@media (max-width:759px){
+  /* 16:9 は外すが、文字数の少ないスライドが薄くなりすぎないよう下限は残す */
+  .stage{aspect-ratio:auto;min-height:52vw}
+  .head{min-height:0}
+  /* 大見出しだけ上限を掛け、狭い幅で1文字だけ折り返すのを防ぐ */
+  .c-title,.big,.sec-title{font-size:calc(var(--pt) * min(var(--size),38))}
+  .warn{font-size:calc(var(--pt) * min(var(--size),22))}
+  .steps.wide{grid-template-columns:1fr;row-gap:calc(var(--pt) * 16)}
+  .steps.wide .lab{margin-bottom:calc(var(--pt) * 3)}
+  .stat-row{grid-template-columns:1fr;row-gap:calc(var(--pt) * 3)}
+  .toc li a{font-size:.8rem}
+}
+
+/* コンテナクエリ非対応ブラウザ向けの退避 */
+@supports not (container-type:inline-size){
+  .stage{--pt:0.8px;aspect-ratio:auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><p class="eyebrow">Slides ・ 16:9 ・ 全31枚</p><h1>巧妙化するAI詐欺から身を守る ― スライド(全31枚)</h1><div class="actions"><a class="btn" href="./">← 構成案ページへ戻る</a><a class="btn primary" href="slides/deepfake-talk.pptx" download>PowerPoint (.pptx) をダウンロード</a></div><p class="hint">各カードは投影時の見た目（16:9）です。カード下の「📝 台本・発表者ノート」を開くと、そのスライドで話す内容と注意点が読めます。</p></header>
+<nav class="toc" aria-label="目次"><h2>目次</h2><div class="toc-groups"><div class="toc-group"><p class="toc-part">0 自己紹介</p><ul><li><a href="#s1"><span class="num">1</span>巧妙化するAI詐欺から身を守る</a></li><li><a href="#s2"><span class="num">2</span>私たちは「お金が動く現場」にいます</a></li><li><a href="#s3"><span class="num">3</span>持ち帰っていただくのは、</a></li></ul></div><div class="toc-group"><p class="toc-part">1 第1部</p><ul><li><a href="#s4"><span class="num">4</span>詐欺の進化史</a></li><li><a href="#s5"><span class="num">5</span>祝・ご当選</a></li><li><a href="#s6"><span class="num">6</span>昔よくあった詐欺メール</a></li><li><a href="#s7"><span class="num">7</span>なぜプロの詐欺師は、</a></li><li><a href="#s8"><span class="num">8</span>バレバレの嘘は「選別装置」</a></li><li><a href="#s9"><span class="num">9</span>この商売、200年前から ―「スペインの囚人」</a></li><li><a href="#s10"><span class="num">10</span>「自分は引っかからない」</a></li><li><a href="#s11"><span class="num">11</span>AI時代：ばらまきから、あなた専用へ</a></li><li><a href="#s12"><span class="num">12</span>38億円のニセ会議（香港・実話）</a></li><li><a href="#s13"><span class="num">13</span>顔と声の「材料」は、知らないうちに外にある</a></li><li><a href="#s14"><span class="num">14</span>では、いまの日本は</a></li></ul></div><div class="toc-group"><p class="toc-part">2 第2部</p><ul><li><a href="#s15"><span class="num">15</span>では、いまの日本は？</a></li><li><a href="#s16"><span class="num">16</span>「お母さん、俺だけど」</a></li><li><a href="#s17"><span class="num">17</span>「AI詐欺のニュース、聞かないですよね」</a></li><li><a href="#s18"><span class="num">18</span>答えは、番号。</a></li><li><a href="#s19"><span class="num">19</span>ニセ警察も、第1部と同じ構造</a></li><li><a href="#s20"><span class="num">20</span>一方、アメリカでは</a></li><li><a href="#s21"><span class="num">21</span>次に来るのは——</a></li></ul></div><div class="toc-group"><p class="toc-part">3 実演</p><ul><li><a href="#s22"><span class="num">22</span>「本人らしさ」は作られる</a></li><li><a href="#s23"><span class="num">23</span>実演①　偽の「私」の声</a></li><li><a href="#s24"><span class="num">24</span>実演②　AIは相手に合わせて話し方を変える</a></li><li><a href="#s25"><span class="num">25</span>実演③　このAIは断る。しかし——</a></li><li><a href="#s26"><span class="num">26</span>番号も、顔も、声も、</a></li></ul></div><div class="toc-group"><p class="toc-part">4 結論</p><ul><li><a href="#s27"><span class="num">27</span>手がかりは、全部裏切られた</a></li><li><a href="#s28"><span class="num">28</span>守り方は 3つ</a></li><li><a href="#s29"><span class="num">29</span>今日の話は、一本の線</a></li><li><a href="#s30"><span class="num">30</span>冒頭の1億円は、</a></li></ul></div><div class="toc-group"><p class="toc-part">付録</p><ul><li><a href="#s31"><span class="num">31</span>主な出典</a></li></ul></div></div></nav>
+<main class="deck">
+<section class="slide" id="s1"><div class="stage t-cover"><span class="pageno fz" style="--size:13">1 / 31</span><div class="body"><div class="cover"><p class="c-title fz" style="--size:48">巧妙化するAI詐欺から身を守る</p><p class="c-sub fz" style="--size:28">― 見破らなくても、守れます ―</p></div><p class="s-footer center fz" style="--size:15">（会社名・講師名・日付）</p></div></div><div class="under"><span class="part">0 自己紹介</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">開演前から表示。第一声は自己紹介から。</p></details></div></section>
+<section class="slide" id="s2"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">2 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">私たちは「お金が動く現場」にいます</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>皆さんのお金が安全に動く仕組みを、毎日支えている会社です</li><li>現場で実際に見た、なりすまし・不正の話をひとつ（口頭で）</li></ul></div></div></div><div class="under"><span class="part">0 自己紹介</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">名乗りと所属（0.5分）→ 現場の実例1つ・固有情報は伏せる（2分）。実例は事前にコンプラ確認。出せなければ業界公知の事例に差し替えるが「現場から」の一人称は維持。</p></details></div></section>
+<section class="slide" id="s3"><div class="stage t-big"><span class="pageno fz" style="--size:13">3 / 31</span><div class="body"><div class="bigwrap"><p class="big fz" style="--size:54">持ち帰っていただくのは、<br>たった一つ。</p><p class="big-sub fz" style="--size:22">突然の「お金・警察・口座」の電話から身を守る方法</p></div></div></div><div class="under"><span class="part">0 自己紹介</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「今日は怖い話もしますが、目的は一つ。突然の『お金・警察・口座』の電話から身を守る方法を、一つだけ持って帰っていただくことです」。※「怖がらせるためではなく」の保証はこの1回に留める。繰り返すと緊張感ごと抜ける。</p></details></div></section>
+<section class="slide" id="s4"><div class="stage t-section"><span class="pageno fz" style="--size:13">4 / 31</span><div class="body"><p class="kicker fz" style="--size:20">第1部</p><div class="sec-body"><p class="sec-title fz" style="--size:54">詐欺の進化史</p><p class="sec-sub fz" style="--size:24">「突然ですが、おめでとうございます！」からAI時代まで</p></div></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">この区間の「そうなんだ」：わざと嘘くさい文面は『疑わない人だけを選び出す』フィルタだった——そしてAIが、そのフィルタを不要にする。</p></details></div></section>
+<section class="slide" id="s5"><div class="stage t-big"><span class="pageno fz" style="--size:13">5 / 31</span><div class="body"><div class="bigwrap"><p class="big fz" style="--size:54">祝・ご当選<br>皆さま全員に 1億円</p></div></div><div class="warn fz" style="--size:28">※本当に差し上げることはできません</div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">改まった声で「突然ですが——おめでとうございます！本日このセミナーにご参加の皆さま全員に、もれなく1億円を差し上げます！」。笑いと戸惑いを数秒待ってから「……驚かせてすみません。もちろん、本当ではありません。ただ、いま皆さん、一瞬で『そんなはずはない』と思いましたよね。今日はまず、その話から始めます。実はいまの嘘、プロの詐欺師が何十年も使い続けてきた、由緒正しい手口なんです」。※打消し表示はスライドに大きく・発言と同時（隅に小さくはNG）。聴衆の反応を採点する言い方（「全員見抜けましたね」等）はしない。</p></details></div></section>
+<section class="slide" id="s6"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">6 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">昔よくあった詐欺メール</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>「おめでとうございます！あなたのメールアドレスが 1等3億円 に当選しました」</li><li>「有料サイトの 未納料金 が発生しています。本日中にご連絡がない場合、法的手続きに移行します」</li><li>「余命わずかな資産家です。全財産をあなたにお譲りしたい のでご連絡ください」</li></ul></div></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「——この中のどれかを、受け取ったことのある方？」挙手を待つ。「こんなのには、皆さん引っかかりませんよね？ 応募していない懸賞に当選する。身に覚えのない未納料金。会ったこともない資産家からの遺産。さっきの1億円と同じで、誰が読んでも嘘だと分かります」</p></details></div></section>
+<section class="slide" id="s7"><div class="stage t-big"><span class="pageno fz" style="--size:13">7 / 31</span><div class="body"><div class="bigwrap"><p class="big fz" style="--size:54">なぜプロの詐欺師は、<br>誰が見てもバレる嘘を<br>何十年も送り続けたのか？</p></div></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「ここで不思議に思いませんか。騙すのが目的なら、もっと上手な嘘を書けばいい。なぜプロの詐欺師が、誰が見てもバレる嘘を、何十年も送り続けたのか。——実は、ゾッとするほど合理的な理由があります」</p></details></div></section>
+<section class="slide" id="s8"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">8 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">バレバレの嘘は「選別装置」</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>詐欺で一番コストがかかるのは、その後の「人間によるやり取り」</li><li>疑う人は、最初の一通で外れてくれる</li><li>「それでも信じる、いちばん疑わない人」だけが返信してくる</li></ul></div><p class="s-footer fz" style="--size:15">出典：Microsoft Research（C. Herley, 2012）</p></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「詐欺で一番コストがかかるのは、メールを送ることではなく、その後の『人間によるやり取り』です。返信してきた相手とは、人間の詐欺師が何通も、何日もやり取りしなければいけない。だから途中で我に返る人に手間をかけたら赤字になる。あの嘘くさい文面は、“それでも信じてしまう、いちばん疑わない人”だけが返信してくるように作られた選別装置なんです。賢い人は最初の一通で外れてくれる——それが狙いでした」。※手口の再現方法ではなく、公開研究にある仕組みの説明に留める。</p></details></div></section>
+<section class="slide" id="s9"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">9 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:36">この商売、200年前から ―「スペインの囚人」</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>19世紀、欧米の資産家に届いた手紙——「牢獄の高貴なお方を救えば、財産の3分の1を」</li><li>お金を送っても、囚人は出てこない。「新しい障害が起きた」と追加請求だけが届く</li><li>1898年のニューヨーク・タイムズが「蘇った古い詐欺」と報道——当時すでに古典</li></ul></div><p class="emph fz" style="--size:26">手紙の決まり文句：「このことは、誰にも言わないでください」</p><p class="s-footer fz" style="--size:15">出典：The New York Times（1898年3月20日）</p></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">スペインの囚人の物語を語る（台本は構成案ページ第1部参照）。「そしてこの手紙には、決まってこう書いてありました。『このことは、くれぐれも誰にも言わないでください』——覚えておいてください、あとでまた出てきます」。続けて「2000年代、詐欺の舞台は手紙からメールに移ります。さっきの3つは、その直系の子孫です。道具は変わっても、構造は200年間ずっと同じ——同じ嘘を何十万人にばらまいて、引っかかる人を待つ。逆に、特定の一人を調べ上げて専用の嘘を作る“オーダーメイドの詐欺”は、手間がかかりすぎて、大企業や大富豪を狙うときにしか割に合いませんでした」。※「誰にも言うな」は結論③手前の即切りの合図で回収する伏線。</p></details></div></section>
+<section class="slide" id="s10"><div class="stage t-big"><span class="pageno fz" style="--size:13">10 / 31</span><div class="body"><div class="bigwrap"><p class="big fz" style="--size:54">「自分は引っかからない」<br>——それは正しかった。<br>今までは。</p></div></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「つまり、さっき『そんなはずはない』と感じた皆さんは、この商売の仕組みの上では、最初から相手にされていません。『自分は引っかからない』——それは正しかった。今までは」</p></details></div></section>
+<section class="slide" id="s11"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">11 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">AI時代：ばらまきから、あなた専用へ</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>大人数に同じ嘘 ＝ 安い ／ 一人専用の嘘 ＝ 高い（この経済学が詐欺の形を200年決めてきた）</li><li>AIが「高い部分」——調べる・本物らしい文章や声を作る・応対する——を丸ごと肩代わり</li><li>ばらまきの安さで、狙い撃ちの精度が手に入る</li></ul></div><p class="emph fz" style="--size:26">バカな嘘は、もう来ません。あなた専用の、賢い嘘が来ます</p></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">ゆっくり、順を追って。「ここから、時代が変わります。（中略）一人あたりの手間がほぼゼロになると、“オーダーメイドの詐欺”を何万人にも同時に仕掛けられる。公開情報・資産・肩書き・家族構成が外から見える人ほど、狙う価値が出ます」</p></details></div></section>
+<section class="slide" id="s12"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">12 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">38億円のニセ会議（香港・実話）</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>財務責任者から「極秘案件」のメール——彼は疑った。プロだから当然</li><li>ビデオ会議には、見慣れた財務責任者と同僚たち。顔も声もいつも通り</li><li>15回に分けて送金——会議にいたのは、本人以外すべてニセモノ</li></ul></div><p class="emph fz" style="--size:26">騙されたのは、うっかり者ではない。一度疑ったプロ</p><p class="s-footer fz" style="--size:15">出典：CNN・香港警察発表（被害約38億円）</p></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">物語として語り、「被害は約38億円」で一拍おく。「騙されたのは、うっかり者ではありません。一度疑ったプロです」。※「何が起きたか」だけを語り、作り方には触れない。</p></details></div></section>
+<section class="slide" id="s13"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">13 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:36">顔と声の「材料」は、知らないうちに外にある</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>映像の顔は、その場で別人に変えられる段階に来ている</li><li>声は、ほんの少しの音声から本人そっくりの声が作れる</li><li>他人が投稿した動画・会議の録画・留守番電話——自分が用心しても材料は残る</li></ul></div></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「ディープフェイクは、映像の顔をその場で別人に変えられる段階に入っています。声も、ほんの少しの音声——他人が投稿した動画、会議の録画、留守番電話——から本人そっくりの声が作れる。自分が用心して声を出さなくても、材料は知らないうちに外に残っています」</p></details></div></section>
+<section class="slide" id="s14"><div class="stage t-big"><span class="pageno fz" style="--size:13">14 / 31</span><div class="body"><div class="bigwrap"><p class="big fz" style="--size:54">では、いまの日本は<br>この進化のどこにいるのか？</p></div></div></div><div class="under"><span class="part">1 第1部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「整理します。疑わない人だけを選んでいた詐欺が、疑う人も突破する詐欺へ——手紙から200年続いた“ばらまき”の時代が、終わろうとしています。ここまでが、進化の理論です。……では、いまの日本は、この歴史のどこにいるでしょうか」→第2部へ。</p></details></div></section>
+<section class="slide" id="s15"><div class="stage t-section"><span class="pageno fz" style="--size:13">15 / 31</span><div class="body"><p class="kicker fz" style="--size:20">第2部</p><div class="sec-body"><p class="sec-title fz" style="--size:54">では、いまの日本は？</p><p class="sec-sub fz" style="--size:24">― 答え合わせ ―</p></div></div></div><div class="under"><span class="part">2 第2部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">この区間の「そうなんだ」：日本のいまの主役はAIではなく「番号」。しかし米国ではAI詐欺への警告が公式化——次は、番号偽装にAIが混ざってくる。</p></details></div></section>
+<section class="slide" id="s16"><div class="stage t-big"><span class="pageno fz" style="--size:13">16 / 31</span><div class="body"><div class="bigwrap"><p class="big fz" style="--size:54">「お母さん、俺だけど」</p><p class="big-sub fz" style="--size:22">——何を手がかりに、本人だと判断しますか？</p></div></div></div><div class="under"><span class="part">2 第2部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「舞台はメールから、電話に移ります。——こういう電話が来たら、何を手がかりに本人だと判断しますか？」。声・話し方・内容・雰囲気・番号など、出た答えを板書（模造紙かホワイトボード）。「この紙、最後にもう一度使います」</p></details></div></section>
+<section class="slide" id="s17"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">17 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:36">「AI詐欺のニュース、聞かないですよね」</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>「AIの声にだまされた」というニュース——聞いたことはありますか？</li><li>日本の統計には「AI詐欺」という数字自体がまだない（手口別分類に欄がない）</li><li>では、いまの日本で一番効いている「偽装」は何か？</li></ul></div></div></div><div class="under"><span class="part">2 第2部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「第1部の話を聞くと、日本でも『AIの声にだまされた』というニュースが毎日出ていそうですよね。——皆さん、聞いたことはありますか？ ……ほとんどないと思います」</p></details></div></section>
+<section class="slide" id="s18"><div class="stage t-stat"><span class="pageno fz" style="--size:13">18 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">答えは、番号。</p></div><div class="rule"></div><div class="content center"><div class="stat"><div class="stat-row"><p class="stat-lab fz" style="--size:20">2025年 詐欺全体の被害</p><p class="stat-val fz" style="--size:28"><span class="acc">約3,257億円</span><span class="v">（過去最悪）</span></p></div><div class="stat-row"><p class="stat-lab fz" style="--size:20">うち特殊詐欺</p><p class="stat-val fz" style="--size:28"><span class="acc">約1,423億円</span></p></div><div class="stat-row"><p class="stat-lab fz" style="--size:20">その約7割＝約1,005億円</p><p class="stat-val fz" style="--size:28"><span class="acc">「ニセ警察詐欺」</span></p></div><div class="stat-row"><p class="stat-lab fz" style="--size:20">犯行電話の最多</p><p class="stat-val fz" style="--size:28"><span class="acc">「＋」</span><span class="v">で始まる国際電話・末尾</span><span class="acc">「0110」</span></p></div></div></div><p class="emph danger fz" style="--size:28">警察署の番号表示は、本人確認になりません</p><p class="s-footer fz" style="--size:15">出典：警察庁 令和7年統計（講演直前に最新値を再確認）</p></div></div><div class="under"><span class="part">2 第2部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">着信画面「○○警察署」のイメージを大きく見せながら。「犯行電話でいちばん多いのは、『＋』で始まる国際電話です。番号の末尾を『0110』に見せかけて、警察署を装います。今日は、これだけ覚えて帰っていただいても十分です——警察署の番号表示は、本人確認になりません」</p></details></div></section>
+<section class="slide" id="s19"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">19 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">ニセ警察も、第1部と同じ構造</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>最初は自動音声——何十万件にもばらまく</li><li>信じて操作した人だけが、人間の詐欺師につながる</li><li>「警察」という大胆でバレやすい嘘 ＝ 疑う人を先にふるい落とす選別装置</li></ul></div><p class="emph fz" style="--size:26">いまの日本の主流は、「ばらまいて選別する」商売の完成形</p></div></div><div class="under"><span class="part">2 第2部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「“警察”なんて、調べればすぐバレる大胆な嘘です。でも皆さんはもう、この理屈をご存じですね。（中略）1億円や当選メールと同じ——疑う人を先にふるい落とす選別装置なんです」。第1部の回収ポイント。</p></details></div></section>
+<section class="slide" id="s20"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">20 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">一方、アメリカでは</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>FBI・FTC が「生成AIを使った詐欺」への警告を公式に発表</li><li>家族の声をまねた「音声クローン詐欺」の相談が実際に増えている</li><li>日本の統計に数字がないのは「起きていない」からではなく「まだ見えていない」から</li></ul></div><p class="s-footer fz" style="--size:15">出典：FBI IC3 注意喚起（2024年12月）／FTC 消費者警告</p></div></div><div class="under"><span class="part">2 第2部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「『なんだ、日本はまだAIじゃないのか』と安心しかけたところで——アメリカの話です。（中略）つまり私たちは、アメリカとの時間差の中にいます」。※「急増」等の倍率は言わず、当局が公式警告を出している事実で語る。</p></details></div></section>
+<section class="slide" id="s21"><div class="stage t-big"><span class="pageno fz" style="--size:13">21 / 31</span><div class="body"><div class="bigwrap"><p class="big fz" style="--size:54">次に来るのは——<br>番号偽装に、AIが混ざる</p><p class="big-sub fz" style="--size:22">「0110」の表示で信じさせ、本人そっくりの声でとどめを刺す</p></div></div></div><div class="under"><span class="part">2 第2部</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">ゆっくり。「この時間差は、必ず埋まります。そして、その波が日本に来るときも、番号偽装が消えてAIに置き換わるわけではありません。いまある型に、AIが“混ざって”きます。番号のカードとAIのカードが、同時に切られる。そうなったとき、皆さんは何で見分けますか？ 言葉だけでは信じにくいと思いますので、ここからは実物をお見せします」→実演へ。</p></details></div></section>
+<section class="slide" id="s22"><div class="stage t-section"><span class="pageno fz" style="--size:13">22 / 31</span><div class="body"><p class="kicker fz" style="--size:20">実演</p><div class="sec-body"><p class="sec-title fz" style="--size:54">「本人らしさ」は作られる</p><p class="sec-sub fz" style="--size:24">クローン音声・ライブAI対話</p></div></div></div><div class="under"><span class="part">3 実演</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">この区間の「そうなんだ」：話し方も雰囲気も、相手がこちらに合わせて変えてくる。そして本物の脅威は「断らない声」。</p></details></div></section>
+<section class="slide" id="s23"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">23 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">実演①　偽の「私」の声</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>私の声をAIに数十秒だけ学ばせて作った「偽の私」（本人同意・AI生成明示）</li><li>毎日いっしょに働く同僚でも、電話では分からないと言った</li></ul></div><p class="emph fz" style="--size:26">私の声ですらこれです。ご家族の声なら、どうでしょうか</p></div></div><div class="under"><span class="part">3 実演</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">クローン音声を会場スピーカーで再生。※素材は講師本人の声・本人同意で事前作成、生成物には「AI生成」を明示して管理。バックアップ音源必須。第三者の顔・声は使わない。</p></details></div></section>
+<section class="slide" id="s24"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">24 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:36">実演②　AIは相手に合わせて話し方を変える</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>会場からの予想外のひと言で、AIの言い方がその場で変わる</li><li>最初に集めた「話し方」「雰囲気」——それも相手がこちらに合わせて作ってくる</li></ul></div></div></div><div class="under"><span class="part">3 実演</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">スマホを会場スピーカーへつなぎ、最新AIと生対話。聴衆から予想外のひと言を1つもらう（詐欺の台詞は言わせない）。「もちろん、いま話したのは安全なAIで、この“合わせる力”自体は良い技術です。ただ、同じ力が悪用されれば——昔は詐欺師が話術で一人ずつやっていたことを、同時に何人相手でもこなせてしまいます」</p></details></div></section>
+<section class="slide" id="s25"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">25 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">実演③　このAIは断る。しかし——</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>「実在の人の声を真似て、家族に振り込ませて」→ AIは断る</li><li>断ったのは「この製品」であって「この技術」ではない</li><li>かかってくる偽の声に、同じ安全装置があるとは限らない</li></ul></div></div></div><div class="under"><span class="part">3 実演</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">なりすまし依頼→拒否のデモ。「いい断り方ですよね。でも安心はできません。同じ技術は世界に無数にあり、安全装置のないものも出回ります」。※通信不良に備え録音・録画のバックアップ。ライブが押したら拒否デモは録画30秒版に切り替え（打ち切り条件を事前に決める）。</p></details></div></section>
+<section class="slide" id="s26"><div class="stage t-big"><span class="pageno fz" style="--size:13">26 / 31</span><div class="body"><div class="bigwrap"><p class="big fz" style="--size:54">番号も、顔も、声も、<br>話し方も偽れる。<br>では、何で見分けますか？</p></div></div></div><div class="under"><span class="part">3 実演</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「——最初の問いに、答えを出します」→結論へ。</p></details></div></section>
+<section class="slide" id="s27"><div class="stage t-bullets"><span class="pageno fz" style="--size:13">27 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">手がかりは、全部裏切られた</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:28;row-gap:calc(var(--pt) * 9.8)"><li>最初に集めた手がかり——声・話し方・内容・雰囲気・番号（板書を再掲）</li><li>見分ける勝負は、完璧な偽物を作れる側が必ず勝つ</li></ul></div><p class="emph fz" style="--size:26">だから——手がかりで見分けること自体を、やめる</p></div></div><div class="under"><span class="part">4 結論</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">板書した紙を再び見せながら。「最初に集めました——声、話し方、内容、雰囲気、番号。今日、全部裏切られましたね。だったら、手がかりで見分けること自体をやめればいい」</p></details></div></section>
+<section class="slide" id="s28"><div class="stage t-steps"><span class="pageno fz" style="--size:13">28 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">守り方は 3つ</p></div><div class="rule"></div><div class="content center"><div class="steps wide"><p class="lab fz" style="--size:20">①【鳴る前】</p><div class="step"><p class="main fz" style="--size:30">怪しい電話を防ぐ</p><p class="note fz" style="--size:19">固定電話は国際電話の利用休止／スマホは迷惑電話対策アプリ</p></div><p class="lab fz" style="--size:20">②【警察・お金の話が出たら】</p><div class="step"><p class="main fz" style="--size:30">番号や映像を信じず、切る</p><p class="note fz" style="--size:19">「誰にも言うな」「ATM」「ギフトカード」は即切りの合図</p></div><p class="lab fz" style="--size:20">③【切ったあと】</p><div class="step"><p class="main fz" style="--size:30">自分で調べた番号で確かめる</p><p class="note fz" style="--size:19">着信履歴は使わない／警察相談は「#9110」／家族はもともと知っている番号へ</p></div></div></div><p class="emph fz" style="--size:26">電話では、その場で送金せず、口座や暗証番号も伝えない</p></div></div><div class="under"><span class="part">4 結論</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「この“一度切って、自分で調べてかけ直す”は、番号が本物でも、声が本物でも、相手がAIでも人間でも——効きます」。※射程の明示：この主手順が守るのは「電話・ビデオ通話でのなりすまし」。投資話・偽サイト・長期の関係構築型詐欺は別の備えが要る、と一言添える。「本物の警察なら、確認のためにいったん切っても、不利益はありません」。ここで第1部の「誰にも言うな」の伏線を回収。</p></details></div></section>
+<section class="slide" id="s29"><div class="stage t-steps"><span class="pageno fz" style="--size:13">29 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">今日の話は、一本の線</p></div><div class="rule"></div><div class="content center"><div class="steps narrow"><p class="lab fz" style="--size:28">1</p><div class="step"><p class="main fz" style="--size:30">バレバレの嘘は、疑わない人を選ぶ「フィルタ」だった</p></div><p class="lab fz" style="--size:28">2</p><div class="step"><p class="main fz" style="--size:30">AIがその選別を不要にし、疑う人も突破される時代が始まった</p></div><p class="lab fz" style="--size:28">3</p><div class="step"><p class="main fz" style="--size:30">いまの日本の主役は、AIではなく「番号」</p></div><p class="lab fz" style="--size:28">4</p><div class="step"><p class="main fz" style="--size:30">次は、番号偽装にAIが混ざってくる</p></div><p class="lab fz" style="--size:28">5</p><div class="step"><p class="main fz" style="--size:30">だから——見分けるのをやめて、一度切って、自分で調べてかけ直す</p></div></div></div></div></div><div class="under"><span class="part">4 結論</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">スライドの5項目を一言ずつ指差しながら。「今日の話を、ひと息で巻き戻します。（中略）——全部、一本の線でつながっています」</p></details></div></section>
+<section class="slide" id="s30"><div class="stage t-big"><span class="pageno fz" style="--size:13">30 / 31</span><div class="body"><div class="bigwrap"><p class="big fz" style="--size:54">冒頭の1億円は、<br>あらためて、差し上げられません。</p><p class="big-sub fz" style="--size:22">帰ったらご家族に「1億円をもらい損ねた話」を——笑い話が、そのまま家族を守る話になります</p></div></div></div><div class="under"><span class="part">4 結論</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">「でも思い出してください。あのとき会場に流れた『そんなはずはない』という空気。あれが“ばらまきの嘘”への完璧な勝ち方です。これから来るのは、笑い飛ばせない、あなた専用の嘘。だからこそ、笑う代わりに——一度切って、自分で調べて、かけ直す」</p></details></div></section>
+<section class="slide" id="s31"><div class="stage t-sources"><span class="pageno fz" style="--size:13">31 / 31</span><div class="body"><div class="head"><p class="title fz" style="--size:40">主な出典</p></div><div class="rule"></div><div class="content"><ul class="bul fz" style="--size:18;row-gap:calc(var(--pt) * 8.1)"><li>警察庁「令和7年における特殊詐欺及びSNS型投資・ロマンス詐欺の認知・検挙状況等について」</li><li>Cormac Herley (Microsoft Research)「Why do Nigerian Scammers Say They are from Nigeria?」WEIS 2012</li><li>The New York Times「An Old Swindle Revived」1898年3月20日</li><li>FBI IC3  PSA（生成AI悪用詐欺への公式警告・2024年12月）／FTC 消費者警告</li><li>CNN「Finance worker pays out $25 million after video call with deepfake &#x27;chief financial officer&#x27;」</li><li>警察庁 SOS47「ニセ警察詐欺に注意！」「ニセ警察官とのビデオ通話」／政府広報オンライン</li></ul></div></div></div><div class="under"><span class="part">付録</span><details><summary>📝 台本・発表者ノート</summary><p class="notes">質疑応答用に最後に表示したままにする。数値はスライド化の直前に最新の一次資料で再確認。</p></details></div></section>
+</main>
+<footer class="page"><p>スライドの正本は <code>slides/slides-spec.json</code>。このページは <code>slides/build_html.py</code> で、PowerPoint は <code>slides/build_pptx.py</code> で生成しています。</p><p>数値・出典はスライド化の直前に最新の一次資料で再確認してください。</p></footer>
+</div>
+</body>
+</html>
