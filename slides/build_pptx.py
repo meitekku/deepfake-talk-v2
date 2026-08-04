@@ -59,6 +59,10 @@ SLOT_SIDE_R = 0.34              # 同・プレースホルダ幅
 SLOT_GAP_R = 0.04               # 同・本文とのすき間
 SLOT_BAND_H, SLOT_BAND_GAP = 1.35, 0.22   # pos:bottom の帯高さとすき間
 
+# sources（出典）: 表示名＋URL の2行1組。比率は収まり判定と描画で共用する。
+SRC_NAME_LS, SRC_URL_LS, SRC_GAP_R = 1.25, 1.15, 0.30
+SRC_SIZES = (15, 14, 13, 12)    # 表示名の候補pt（15pt が全名を1行に収める上限）
+
 
 # ---------------------------------------------------------------- 文字幅の見積り
 def em_width(text):
@@ -491,6 +495,49 @@ def render_chart(slide, s):
     pic.top = Emu(int(Inches(CONTENT_TOP) + (avail_h - pic.height) / 2))
 
 
+def source_sizes(items, avail_h):
+    """(表示名, URL) の2行1組を avail_h に収める (表示名pt, URLpt) を返す。"""
+    size, url_size = SRC_SIZES[-1], 10
+    for cand in SRC_SIZES:
+        u = 11 if cand >= 14 else 10
+        text_w = CW - INSET - cand / 72.0      # ぶら下げインデント分を差し引く
+        name_lines = sum(est_lines(n, cand, text_w) for n, _ in items)
+        url_lines = sum(est_lines(url, u, text_w) for _, url in items)
+        need = (name_lines * cand * SRC_NAME_LS + url_lines * u * SRC_URL_LS
+                + (len(items) - 1) * cand * SRC_GAP_R) / 72
+        if need <= avail_h:
+            size, url_size = cand, u
+            break
+    return size, url_size
+
+
+def render_source_links(slide, items, avail_h):
+    """出典を「表示名／URL」の2行1組で並べ、どちらの行にもリンクを張る。"""
+    size, url_size = source_sizes(items, avail_h)
+    box, tf = add_tb(slide, ML, CONTENT_TOP, CW, avail_h)
+    hang = Pt(size)
+    for i, (name, url) in enumerate(items):
+        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        p.line_spacing = SRC_NAME_LS
+        pPr = p._p.get_or_add_pPr()
+        pPr.set("marL", str(hang.emu))
+        pPr.set("indent", str(-hang.emu))
+        run = style_run(p.add_run(), size, INK)
+        run.text = "・" + name
+        run.hyperlink.address = url
+
+        q = tf.add_paragraph()
+        q.line_spacing = SRC_URL_LS
+        if i < len(items) - 1:
+            q.space_after = Pt(size * SRC_GAP_R)
+        qPr = q._p.get_or_add_pPr()
+        qPr.set("marL", str(hang.emu))       # URL 行は「・」の分だけ字下げして表示名に揃える
+        qPr.set("indent", "0")
+        url_run = style_run(q.add_run(), url_size, MUTED)
+        url_run.text = url
+        url_run.hyperlink.address = url
+
+
 def render_sources(slide, s):
     add_title(slide, s["title"])
     bottom = CONTENT_BOTTOM
@@ -498,7 +545,11 @@ def render_sources(slide, s):
         add_footer(slide, s["footer"])
         bottom = FOOTER_Y - 0.08
 
-    items = s["bullets"]
+    if s.get("sources"):
+        render_source_links(slide, s["sources"], bottom - CONTENT_TOP)
+        return
+
+    items = s["bullets"]        # 旧形式（URL なしの文字列リスト）
     avail_h = bottom - CONTENT_TOP
     size = 16
     for cand in (18, 17, 16):
@@ -639,6 +690,38 @@ def verify():
     print("[6] image placeholder slides : %s (expected %s) -> %s"
           % (got, want, "OK" if f_ok else "NG"))
     ok &= f_ok
+
+    # (g) sources スライドの出典リンク（表示名行と URL 行の両方に spec の URL が張れているか）
+    src_slides = [(i, s) for i, s in enumerate(spec["slides"], start=1) if s.get("sources")]
+    bad_link, bad_order, n_runs, n_uniq = [], [], 0, 0
+    for i, s in src_slides:
+        want = {u for _, u in s["sources"]}
+        got = set()
+        for shp in prs.slides[i - 1].shapes:
+            if not shp.has_text_frame:
+                continue
+            for p in shp.text_frame.paragraphs:
+                for r in p.runs:
+                    if not r.hyperlink.address:
+                        continue
+                    got.add(r.hyperlink.address)
+                    n_runs += 1
+                    # rPr の子要素順（a:ea/a:cs は a:hlinkClick より前）が崩れると
+                    # PowerPoint が「修復が必要」と警告する。
+                    tags = [c.tag for c in r._r.rPr]
+                    h = tags.index(qn("a:hlinkClick"))
+                    if any(qn(t) in tags and tags.index(qn(t)) > h for t in ("a:ea", "a:cs")):
+                        bad_order.append(i)
+        n_uniq += len(got)
+        if got != want:
+            bad_link.append(i)
+    g_ok = not bad_link and not bad_order       # 旧 bullets 形式だけなら 0 件で OK
+    print("[7] source hyperlinks on %s : %d unique (expected %d) / %d runs -> %s%s"
+          % ([i for i, _ in src_slides], n_uniq,
+             sum(len(s["sources"]) for _, s in src_slides), n_runs,
+             "OK" if g_ok else "NG",
+             "" if g_ok else " bad=%s order=%s" % (bad_link, sorted(set(bad_order)))))
+    ok &= g_ok
 
     print("RESULT: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1

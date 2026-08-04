@@ -197,11 +197,14 @@
 ## 付録
 
 ### 33. 主な出典  `sources`
-- 警察庁「令和7年における特殊詐欺及びSNS型投資・ロマンス詐欺の認知・検挙状況等について」
-- Cormac Herley (Microsoft Research)「Why do Nigerian Scammers Say They are from Nigeria?」WEIS 2012
-- The New York Times「An Old Swindle Revived」1898年3月20日
-- FBI IC3  PSA（生成AI悪用詐欺への公式警告・2024年12月）／FTC 消費者警告
-- 毎日新聞「AIで『ニセ警察詐欺』か」2026年1月29日（AI台本＋警察官のニセ映像の摘発例）／KAB「被害1200億円超…ディープフェイク動画による詐欺広告」
-- CNN「Finance worker pays out $25 million after video call with deepfake 'chief financial officer'」
-- 警察庁 SOS47「ニセ警察詐欺に注意！」「ニセ警察官とのビデオ通話」／政府広報オンライン
+- 警察庁「令和7年における特殊詐欺及びSNS型投資・ロマンス詐欺の認知・検挙状況等について」 <https://www.npa.go.jp/bureau/criminal/souni/tokusyusagi/sagi_keihatsu2025.pdf>
+- Cormac Herley (Microsoft Research)「Why do Nigerian Scammers Say They are from Nigeria?」WEIS 2012 <https://www.microsoft.com/en-us/research/publication/why-do-nigerian-scammers-say-they-are-from-nigeria/>
+- The New York Times「An Old Swindle Revived」1898年3月20日 <https://www.nytimes.com/1898/03/20/archives/an-old-swindle-revived-the-spanish-prisoner-and-buried-treasure.html>
+- FBI IC3 PSA「Criminals Use Generative AI to Facilitate Financial Fraud」2024年12月 <https://www.ic3.gov/PSA/2024/PSA241203>
+- CNN「Finance worker pays out $25 million after video call with deepfake 'CFO'」（香港・約38億円） <https://edition.cnn.com/2024/02/04/asia/deepfake-cfo-scam-hong-kong-intl-hnk/index.html>
+- 毎日新聞「AIで『ニセ警察詐欺』か」2026年1月29日（AI台本＋ニセ警察官映像の摘発例） <https://news.infoseek.co.jp/article/mainichi_20260129k0000m040239000c/>
+- KAB熊本朝日放送「被害1200億円超…ディープフェイク動画による詐欺広告」 <https://www.kab.co.jp/news/article/16558364>
+- 警察庁 SOS47「ニセ警察詐欺に注意！」 <https://www.npa.go.jp/bureau/safetylife/sos47/new-topics/241218/02.html>
+- 警察庁 SOS47「ニセ警察官とのビデオ通話」 <https://www.npa.go.jp/bureau/safetylife/sos47/new-topics/241218/06.html>
+- 米国FTC「Scammers use AI to enhance their family emergency schemes」 <https://consumer.ftc.gov/consumer-alerts/2023/03/scammers-use-ai-enhance-their-family-emergency-schemes>
 - 発表者ノート: 質疑応答用に最後に表示したままにする。数値はスライド化の直前に最新の一次資料で再確認。

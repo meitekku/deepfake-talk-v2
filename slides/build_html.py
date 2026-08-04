@@ -45,6 +45,10 @@ SLOT_LABEL_PT, SLOT_DESC_PT = 15, 12
 SLOT_MAIN_R = 0.62              # pos:right のときの本文幅（CW 比）
 SLOT_BAND_H, SLOT_BAND_GAP = 1.35, 0.22   # pos:bottom の帯高さとすき間
 
+# sources（出典）: 表示名＋URL の2行1組。CSS の .src / .src-url の line-height と同値。
+SRC_NAME_LS, SRC_URL_LS, SRC_GAP_R = 1.25, 1.15, 0.30
+SRC_SIZES = (15, 14, 13, 12)    # 表示名の候補pt（15pt が全名を1行に収める上限）
+
 
 # ---------------------------------------------------------------- 文字幅の見積り
 def em_width(text):
@@ -118,6 +122,34 @@ def slot_html(slot, bottom=False):
                    % (fs(SLOT_DESC_PT), esc(slot["desc"])))
     out.append("</div>")
     return "".join(out)
+
+
+def source_sizes(items, avail_h):
+    """(表示名, URL) の2行1組を avail_h に収める (表示名pt, URLpt) を返す。"""
+    size, url_size = SRC_SIZES[-1], 10
+    for cand in SRC_SIZES:
+        u = 11 if cand >= 14 else 10
+        text_w = CW - INSET - cand / 72.0      # ぶら下げインデント分を差し引く
+        name_lines = sum(est_lines(n, cand, text_w) for n, _ in items)
+        url_lines = sum(est_lines(url, u, text_w) for _, url in items)
+        need = (name_lines * cand * SRC_NAME_LS + url_lines * u * SRC_URL_LS
+                + (len(items) - 1) * cand * SRC_GAP_R) / 72
+        if need <= avail_h:
+            size, url_size = cand, u
+            break
+    return size, url_size
+
+
+def source_list_html(items, size, url_size):
+    """出典を「表示名／URL」の2行1組のリンクにしたリスト。"""
+    lis = []
+    for name, url in items:
+        lis.append('<li><a class="src-a" href="%s" target="_blank" rel="noopener">'
+                   '<span class="src-name">%s</span>'
+                   '<span class="src-url fz" style="%s">%s</span></a></li>'
+                   % (esc(url), esc(name), fs(url_size), esc(url)))
+    style = "%s;row-gap:calc(var(--pt) * %s)" % (fs(size), num(round(size * SRC_GAP_R, 2)))
+    return '<ul class="bul src fz" style="%s">%s</ul>' % (style, "".join(lis))
 
 
 def bullet_list_html(items, size, gap_ratio):
@@ -332,9 +364,17 @@ def render_chart(s):
 def render_sources(s):
     body = [title_html(s["title"])]
     bottom = FOOTER_Y - 0.08 if s.get("footer") else CONTENT_BOTTOM
-
-    items = s["bullets"]
     avail_h = bottom - CONTENT_TOP
+
+    if s.get("sources"):
+        size, url_size = source_sizes(s["sources"], avail_h)
+        body.append('<div class="content">%s</div>'
+                    % source_list_html(s["sources"], size, url_size))
+        if s.get("footer"):
+            body.append(footer_html(s["footer"]))
+        return "".join(body), ""
+
+    items = s["bullets"]        # 旧形式（URL なしの文字列リスト）
     size = 16
     for cand in (18, 17, 16):
         text_w = CW - INSET - cand / 72.0
@@ -538,6 +578,13 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.45rem,4.2vw,2.2rem
 .bul li{position:relative;padding-left:1em;line-height:1.35;color:var(--s-ink)}
 .bul li::before{content:"\\30FB";position:absolute;left:0;top:0}
 
+/* sources：表示名＋URL の2行1組リンク。line-height と row-gap は
+   build_pptx.py / build_html.py の収まり判定（SRC_NAME_LS / SRC_URL_LS / SRC_GAP_R）と同値。 */
+.src li{line-height:1.25}
+.src-a{display:block;color:var(--s-ink);text-decoration:none;overflow-wrap:anywhere}
+.src-a:hover .src-name{text-decoration:underline}
+.src-url{display:block;color:var(--s-muted);line-height:1.15;overflow-wrap:anywhere}
+
 /* emphasis：#f3e6cf のボックス */
 .emph{flex:none;margin:calc(var(--pt) * 13) 0 0;min-height:calc(var(--pt) * 61);
   padding:calc(var(--pt) * 8) 3%;background:var(--s-emph);color:var(--s-ink);
@@ -702,9 +749,11 @@ def verify():
     ok &= b_ok
 
     # (c) 外部URL参照が 0 件（self-contained）
-    attrs = re.findall(r'(?:src|href)\s*=\s*"(https?://[^"]*)"', doc)
-    schemes = re.findall(r"https?://", doc)
-    imports = re.findall(r"@import", doc)
+    # <a href> の画面遷移はリソース読み込みではないので、出典リンク（アンカー＋表示URL）は除いて判定する。
+    probe = re.sub(r"<a\b[^>]*href=\"https?://[^\"]*\"[^>]*>.*?</a>", "", doc, flags=re.S)
+    attrs = re.findall(r'(?:src|href)\s*=\s*"(https?://[^"]*)"', probe)
+    schemes = re.findall(r"https?://", probe)
+    imports = re.findall(r"@import", probe)
     c_ok = not attrs and not schemes and not imports
     print("[c] external refs : %d src/href, %d url tokens, %d @import -> %s"
           % (len(attrs), len(schemes), len(imports), "OK" if c_ok else "NG"))
@@ -727,6 +776,23 @@ def verify():
     print("[e] image placeholder cards : %s (expected %s) -> %s"
           % (got, want, "OK" if e_ok else "NG"))
     ok &= e_ok
+
+    # (f) sources カードの出典リンクが spec の URL と一致し、target/rel つきか
+    blocks = dict(re.findall(r'<section class="slide" id="s(\d+)">(.*?)</section>', doc, re.S))
+    src_slides = [s for s in spec["slides"] if s.get("sources")]
+    bad_src, n_links = [], 0
+    for s in src_slides:
+        anchors = re.findall(r'<a class="src-a" href="([^"]+)" target="_blank" rel="noopener">',
+                             blocks.get(str(s["n"]), ""))
+        n_links += len(anchors)
+        if anchors != [esc(u) for _, u in s["sources"]]:
+            bad_src.append(s["n"])
+    f_ok = not bad_src                          # 旧 bullets 形式だけなら 0 件で OK
+    print("[f] source links on %s : %d <a href> (expected %d) -> %s%s"
+          % ([s["n"] for s in src_slides], n_links,
+             sum(len(s["sources"]) for s in src_slides),
+             "OK" if f_ok else "NG", "" if f_ok else " bad=%s" % bad_src))
+    ok &= f_ok
 
     print("RESULT: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
