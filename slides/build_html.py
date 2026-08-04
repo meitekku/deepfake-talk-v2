@@ -39,6 +39,12 @@ FOOTER_Y = 6.40
 BIG_TOP = 1.30
 BIG_W = 12.233
 
+# image_slot（あとから画像を貼るための予約領域）。CSS 側の .slot と対応。
+SLOT_LABEL = "イメージ画像スペース"
+SLOT_LABEL_PT, SLOT_DESC_PT = 15, 12
+SLOT_MAIN_R = 0.62              # pos:right のときの本文幅（CW 比）
+SLOT_BAND_H, SLOT_BAND_GAP = 1.35, 0.22   # pos:bottom の帯高さとすき間
+
 
 # ---------------------------------------------------------------- 文字幅の見積り
 def em_width(text):
@@ -97,6 +103,23 @@ def emph_html(text, size=26, danger=False):
     return '<p class="%s" style="%s">%s</p>' % (cls, fs(size), esc(text))
 
 
+def image_slot(s, pos):
+    """指定位置の image_slot を返す（無ければ None）。"""
+    slot = s.get("image_slot")
+    return slot if slot and slot.get("pos") == pos else None
+
+
+def slot_html(slot, bottom=False):
+    """あとから画像を貼るための予約領域（破線の仮置き枠）。"""
+    out = ['<div class="slot%s">' % (" slot-bottom" if bottom else ""),
+           '<p class="slot-lab fz" style="%s">%s</p>' % (fs(SLOT_LABEL_PT), esc(SLOT_LABEL))]
+    if slot.get("desc"):
+        out.append('<p class="slot-desc fz" style="%s">%s</p>'
+                   % (fs(SLOT_DESC_PT), esc(slot["desc"])))
+    out.append("</div>")
+    return "".join(out)
+
+
 def bullet_list_html(items, size, gap_ratio):
     """「・」つきのぶら下げリスト。gap_ratio は pptx の space_after 比。"""
     lis = "".join("<li>%s</li>" % esc(t) for t in items)
@@ -134,6 +157,9 @@ def render_big(s):
     bottom = CONTENT_BOTTOM
     if s.get("warn"):
         bottom = bottom - 1.05 - 0.25
+    slot = image_slot(s, "bottom")
+    if slot:
+        bottom = bottom - SLOT_BAND_H - SLOT_BAND_GAP
     if s.get("sub"):
         bottom = bottom - 1.10 - 0.15
 
@@ -153,6 +179,8 @@ def render_big(s):
     if s.get("sub"):
         body.append('<p class="big-sub fz" style="%s">%s</p>' % (fs(22), esc(s["sub"])))
     body.append("</div>")
+    if slot:
+        body.append(slot_html(slot, bottom=True))
 
     tail = ""
     if s.get("warn"):
@@ -165,23 +193,41 @@ def render_bullets(s):
     bottom = CONTENT_BOTTOM
     if s.get("footer"):
         bottom = FOOTER_Y - 0.08
+    # プレースホルダは本文領域（emphasis を含む）と同じ高さ帯に置く。
+    slot = image_slot(s, "right")
+    body_w = CW * SLOT_MAIN_R if slot else CW
     if s.get("emphasis"):
-        bottom = bottom - 0.85 - 0.18
+        emph_h = 0.85
+        if slot:
+            # 幅が狭まって折り返す分、強調ボックスを縦に伸ばす（文字はみ出し防止）。
+            emph_h = max(emph_h, est_lines(s["emphasis"], 26, body_w - 0.6)
+                         * 26 * 1.35 / 72 + 0.22)
+        bottom = bottom - emph_h - 0.18
 
     items = s["bullets"]
     avail_h = bottom - CONTENT_TOP
     size = 24
-    for cand in (28, 26, 24):
-        text_w = CW - INSET - cand / 72.0     # ぶら下げインデント分を差し引く
+    fit = False
+    for cand in (tuple(range(28, 17, -1)) if slot else (28, 26, 24)):
+        text_w = body_w - INSET - cand / 72.0  # ぶら下げインデント分を差し引く
         lines = sum(est_lines(t, cand, text_w) for t in items)
         need = lines * cand * 1.35 / 72 + (len(items) - 1) * (0.35 * cand / 72)
         if need <= avail_h:
-            size = cand
+            size, fit = cand, True
             break
+    if slot and not fit:
+        raise ValueError("n=%s: バレットが幅 %.2fin の本文領域に収まらない" % (s["n"], body_w))
 
-    body.append('<div class="content">%s</div>' % bullet_list_html(items, size, 0.35))
-    if s.get("emphasis"):
-        body.append(emph_html(s["emphasis"], 26))
+    if slot:
+        main = [bullet_list_html(items, size, 0.35)]
+        if s.get("emphasis"):
+            main.append(emph_html(s["emphasis"], 26))
+        body.append('<div class="content split"><div class="split-main">%s</div>%s</div>'
+                    % ("".join(main), slot_html(slot)))
+    else:
+        body.append('<div class="content">%s</div>' % bullet_list_html(items, size, 0.35))
+        if s.get("emphasis"):
+            body.append(emph_html(s["emphasis"], 26))
     if s.get("footer"):
         body.append(footer_html(s["footer"]))
     return "".join(body), ""
@@ -499,6 +545,24 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.45rem,4.2vw,2.2rem
   display:flex;align-items:center;justify-content:center;text-align:center}
 .emph.danger{color:var(--s-danger)}
 
+/* image_slot：あとから画像を貼るための予約領域（破線の仮置き枠。本文より目立たせない） */
+.slot{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:calc(var(--pt) * 3);color:var(--s-muted);
+  background:#f1f2f5;border:1px dashed #5c6472;border-radius:calc(var(--pt) * 10);
+  padding:calc(var(--pt) * 10) 4%}
+.slot-lab{margin:0;font-weight:700;line-height:1.3}
+.slot-desc{margin:0;line-height:1.4}
+/* pos:right（bullets）：本文 62% ＋ すき間 4% ＋ プレースホルダ 34%。
+   見出しが2行に折り返すカードでは本文帯が pptx より下から始まるため、
+   flex-basis を auto にして帯を縮めない（emphasis が footer に重なるのを防ぐ）。 */
+.content.split{flex:1 0 auto;flex-direction:row;column-gap:4%;align-items:stretch}
+.split-main{flex:0 0 62%;min-width:0;display:flex;flex-direction:column;
+  row-gap:calc(var(--pt) * 13)}
+.split-main .emph{margin-top:auto}
+.content.split .slot{flex:0 0 34%}
+/* pos:bottom（big）：全幅 1.35in ＝ 97pt 相当の横長帯 */
+.slot-bottom{min-height:calc(var(--pt) * 97);margin-top:calc(var(--pt) * 16)}
+
 /* chart：グラフ画像（data URI）。本文領域に収める＝縦横とも上限を掛ける */
 .chart-img{display:block;margin:auto;max-width:100%;max-height:100%;
   width:auto;height:auto;object-fit:contain}
@@ -550,6 +614,10 @@ footer.page p{margin:0 0 6px}
   .steps.wide{grid-template-columns:1fr;row-gap:calc(var(--pt) * 16)}
   .steps.wide .lab{margin-bottom:calc(var(--pt) * 3)}
   .stat-row{grid-template-columns:1fr;row-gap:calc(var(--pt) * 3)}
+  /* right スロットは本文の下へ回す */
+  .content.split{flex-direction:column;row-gap:calc(var(--pt) * 16)}
+  .split-main{flex:auto}
+  .content.split .slot{flex:none;min-height:calc(var(--pt) * 120)}
   .toc li a{font-size:.8rem}
 }
 
@@ -649,6 +717,16 @@ def verify():
     print("[d] links : pptx=%s back=%s -> %s"
           % (has_pptx, has_back, "OK" if d_ok else "NG"))
     ok &= d_ok
+
+    # (e) 画像プレースホルダが image_slot 指定のカードだけにある
+    want = [s["n"] for s in spec["slides"] if s.get("image_slot")]
+    got = [int(n) for n, blk in
+           re.findall(r'<section class="slide" id="s(\d+)">(.*?)</section>', doc, re.S)
+           if '<div class="slot' in blk]
+    e_ok = bool(want) and want == got
+    print("[e] image placeholder cards : %s (expected %s) -> %s"
+          % (got, want, "OK" if e_ok else "NG"))
+    ok &= e_ok
 
     print("RESULT: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1

@@ -15,6 +15,7 @@ from pathlib import Path
 
 from pptx import Presentation
 from pptx.dml.color import RGBColor
+from pptx.enum.dml import MSO_LINE_DASH_STYLE
 from pptx.enum.shapes import MSO_SHAPE, MSO_SHAPE_TYPE
 from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE, PP_ALIGN
 from pptx.oxml.ns import qn
@@ -46,6 +47,17 @@ EMPH_BG = "F3E6CF"
 RULE_LIGHT = "E6E1D6"
 
 META_NAMES = ("meta:pageno", "meta:part")
+SLOT_NAMES = ("slot:image",)
+
+# image_slot（あとから画像を貼るための予約領域）
+SLOT_BG = "F1F2F5"              # ごく薄い背景
+SLOT_LINE = "5C6472"            # 破線ボーダー（muted 系）
+SLOT_LABEL = "イメージ画像スペース"
+SLOT_LABEL_PT, SLOT_DESC_PT = 15, 12
+SLOT_MAIN_R = 0.62              # pos:right のときの本文幅（CW 比）
+SLOT_SIDE_R = 0.34              # 同・プレースホルダ幅
+SLOT_GAP_R = 0.04               # 同・本文とのすき間
+SLOT_BAND_H, SLOT_BAND_GAP = 1.35, 0.22   # pos:bottom の帯高さとすき間
 
 
 # ---------------------------------------------------------------- 文字幅の見積り
@@ -181,9 +193,9 @@ def add_footer(slide, footer):
     label_box(slide, ML, FOOTER_Y, CW, FOOTER_H, footer, 15, MUTED)
 
 
-def add_emph_box(slide, top, height, text, size=26):
+def add_emph_box(slide, top, height, text, size=26, left=ML, width=CW):
     """アクセント背景の角丸ボックス（強調文）。"""
-    shp = add_rect(slide, ML, top, CW, height, EMPH_BG, MSO_SHAPE.ROUNDED_RECTANGLE)
+    shp = add_rect(slide, left, top, width, height, EMPH_BG, MSO_SHAPE.ROUNDED_RECTANGLE)
     try:
         shp.adjustments[0] = 0.16
     except (IndexError, ValueError):
@@ -195,6 +207,43 @@ def add_emph_box(slide, top, height, text, size=26):
     tf.margin_left = tf.margin_right = Inches(0.3)
     tf.margin_top = tf.margin_bottom = Inches(0.05)
     put_text(tf, text, size, INK, bold=True, align=PP_ALIGN.CENTER)
+    return shp
+
+
+def image_slot(s, pos):
+    """指定位置の image_slot を返す（無ければ None）。"""
+    slot = s.get("image_slot")
+    return slot if slot and slot.get("pos") == pos else None
+
+
+def add_image_slot(slide, l, t, w, h, desc):
+    """あとから画像を貼るための予約領域を、破線の仮置き枠として描く。"""
+    shp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
+                                 Inches(l), Inches(t), Inches(w), Inches(h))
+    shp.name = SLOT_NAMES[0]
+    shp.fill.solid()
+    shp.fill.fore_color.rgb = RGBColor.from_string(SLOT_BG)
+    shp.line.color.rgb = RGBColor.from_string(SLOT_LINE)
+    shp.line.width = Pt(0.75)
+    shp.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+    shp.shadow.inherit = False
+    try:
+        # 角丸の半径は min(w, h) 比。細長い枠でも 0.14in 程度に留める。
+        shp.adjustments[0] = min(0.16, 0.14 / min(w, h))
+    except (IndexError, ValueError):
+        pass
+
+    tf = shp.text_frame
+    tf.word_wrap = True
+    tf.auto_size = MSO_AUTO_SIZE.NONE
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    tf.margin_left = tf.margin_right = Inches(0.18)
+    tf.margin_top = tf.margin_bottom = Inches(0.08)
+    put_text(tf, SLOT_LABEL, SLOT_LABEL_PT, MUTED, bold=True,
+             align=PP_ALIGN.CENTER, line_spacing=1.3)
+    if desc:
+        put_text(tf, desc, SLOT_DESC_PT, MUTED, align=PP_ALIGN.CENTER,
+                 line_spacing=1.35, first=False)
     return shp
 
 
@@ -230,6 +279,10 @@ def render_big(slide, s):
         band_h = 1.05
         band_top = bottom - band_h
         bottom = band_top - 0.25
+    slot = image_slot(s, "bottom")
+    if slot:
+        slot_top = bottom - SLOT_BAND_H
+        bottom = slot_top - SLOT_BAND_GAP
     if s.get("sub"):
         sub_h = 1.10
         sub_top = bottom - sub_h
@@ -252,6 +305,8 @@ def render_big(slide, s):
     if s.get("sub"):
         label_box(slide, ML, sub_top, CW, sub_h, s["sub"], 22, MUTED,
                   align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, line_spacing=1.3)
+    if slot:
+        add_image_slot(slide, ML, slot_top, CW, SLOT_BAND_H, slot.get("desc"))
     if s.get("warn"):
         band = add_rect(slide, 0, band_top, SLIDE_W, band_h, DANGER)
         tf = band.text_frame
@@ -268,24 +323,38 @@ def render_bullets(slide, s):
     if s.get("footer"):
         add_footer(slide, s["footer"])
         bottom = FOOTER_Y - 0.08
+    # プレースホルダは本文領域（emphasis を含む）と同じ高さ帯に置く。
+    slot = image_slot(s, "right")
+    body_w = CW
+    if slot:
+        body_w = CW * SLOT_MAIN_R
+        add_image_slot(slide, ML + CW * (SLOT_MAIN_R + SLOT_GAP_R), CONTENT_TOP,
+                       CW * SLOT_SIDE_R, bottom - CONTENT_TOP, slot.get("desc"))
     emph_top = None
     if s.get("emphasis"):
         emph_h = 0.85
+        if slot:
+            # 幅が狭まって折り返す分、強調ボックスを縦に伸ばす（文字はみ出し防止）。
+            emph_h = max(emph_h, est_lines(s["emphasis"], 26, body_w - 0.6)
+                         * 26 * 1.35 / 72 + 0.22)
         emph_top = bottom - emph_h
         bottom = emph_top - 0.18
 
     items = s["bullets"]
     avail_h = bottom - CONTENT_TOP
     size = 24
-    for cand in (28, 26, 24):
-        text_w = CW - INSET - cand / 72.0     # ぶら下げインデント分を差し引く
+    fit = False
+    for cand in (tuple(range(28, 17, -1)) if slot else (28, 26, 24)):
+        text_w = body_w - INSET - cand / 72.0  # ぶら下げインデント分を差し引く
         lines = sum(est_lines(t, cand, text_w) for t in items)
         need = lines * cand * 1.35 / 72 + (len(items) - 1) * (0.35 * cand / 72)
         if need <= avail_h:
-            size = cand
+            size, fit = cand, True
             break
+    if slot and not fit:
+        raise ValueError("n=%s: バレットが幅 %.2fin の本文領域に収まらない" % (s["n"], body_w))
 
-    box, tf = add_tb(slide, ML, CONTENT_TOP, CW, avail_h)
+    box, tf = add_tb(slide, ML, CONTENT_TOP, body_w, avail_h)
     hang = Pt(size)
     for i, text in enumerate(items):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
@@ -298,7 +367,7 @@ def render_bullets(slide, s):
         style_run(p.add_run(), size, INK).text = "・" + text
 
     if emph_top is not None:
-        add_emph_box(slide, emph_top, 0.85, s["emphasis"], 26)
+        add_emph_box(slide, emph_top, emph_h, s["emphasis"], 26, width=body_w)
 
 
 _VALUE_ACCENT = r"(「[^」]*」|『[^』]*』|約?[0-9０-９][0-9０-９,，\.]*[万億兆]?円?)"
@@ -519,10 +588,10 @@ def verify():
         # (b) 発表者ノート
         if not slide.has_notes_slide or not slide.notes_slide.notes_text_frame.text.strip():
             bad_notes.append(idx)
-        # (c) meta 図形を除いた本文テキスト
+        # (c) meta 図形とプレースホルダを除いた本文テキスト
         body = 0
         for shp in slide.shapes:
-            if not shp.has_text_frame or shp.name in META_NAMES:
+            if not shp.has_text_frame or shp.name in META_NAMES + SLOT_NAMES:
                 continue
             if shp.text_frame.text.strip():
                 body += 1
@@ -561,6 +630,15 @@ def verify():
           % (chart_idx, "OK" if e_ok else "NG",
              "" if not no_pic else " missing=%s" % no_pic))
     ok &= e_ok
+
+    # (f) 画像プレースホルダが image_slot 指定のスライドだけに載っているか
+    want = [i for i, s in enumerate(spec["slides"], start=1) if s.get("image_slot")]
+    got = [i for i, slide in enumerate(prs.slides, start=1)
+           if any(shp.name in SLOT_NAMES for shp in slide.shapes)]
+    f_ok = bool(want) and want == got
+    print("[6] image placeholder slides : %s (expected %s) -> %s"
+          % (got, want, "OK" if f_ok else "NG"))
+    ok &= f_ok
 
     print("RESULT: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
