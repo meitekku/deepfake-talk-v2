@@ -10,6 +10,7 @@ CSS へ出す際にカード幅基準の相対値（% / cqw）へ変換する。
 """
 
 import argparse
+import base64
 import html
 import json
 import math
@@ -265,6 +266,23 @@ def render_steps(s):
     return "".join(body), ""
 
 
+def render_chart(s):
+    """見出し＋グラフ画像＋footer。画像は data URI で埋め込む（外部参照ゼロを保つ）。"""
+    path = BASE / s["image"]
+    if not path.exists():
+        raise FileNotFoundError(
+            "グラフ画像がない: %s（python build_chart.py で生成する）" % path)
+    uri = "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode("ascii")
+    alt = s.get("alt") or CHART_ALT.get(s["image"]) or s["title"]
+
+    body = [title_html(s["title"]),
+            '<div class="content center">'
+            '<img class="chart-img" src="%s" alt="%s"></div>' % (uri, esc(alt))]
+    if s.get("footer"):
+        body.append(footer_html(s["footer"]))
+    return "".join(body), ""
+
+
 def render_sources(s):
     body = [title_html(s["title"])]
     bottom = FOOTER_Y - 0.08 if s.get("footer") else CONTENT_BOTTOM
@@ -293,7 +311,14 @@ RENDERERS = {
     "bullets": render_bullets,
     "stat": render_stat,
     "steps": render_steps,
+    "chart": render_chart,
     "sources": render_sources,
+}
+
+# グラフ画像の代替テキスト（spec に "alt" があればそちらが優先）。
+CHART_ALT = {
+    "charts/nise-keisatsu.png":
+        "円グラフ: 特殊詐欺被害額の70.6%がニセ警察詐欺、犯行電話の75.5%が国際電話",
 }
 
 
@@ -473,6 +498,10 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.45rem,4.2vw,2.2rem
   border-radius:calc(var(--pt) * 10);font-weight:700;line-height:1.35;
   display:flex;align-items:center;justify-content:center;text-align:center}
 .emph.danger{color:var(--s-danger)}
+
+/* chart：グラフ画像（data URI）。本文領域に収める＝縦横とも上限を掛ける */
+.chart-img{display:block;margin:auto;max-width:100%;max-height:100%;
+  width:auto;height:auto;object-fit:contain}
 
 /* stat：ラベル＋太字値 */
 .stat{display:grid}

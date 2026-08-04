@@ -15,10 +15,10 @@ from pathlib import Path
 
 from pptx import Presentation
 from pptx.dml.color import RGBColor
-from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.shapes import MSO_SHAPE, MSO_SHAPE_TYPE
 from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE, PP_ALIGN
 from pptx.oxml.ns import qn
-from pptx.util import Inches, Pt
+from pptx.util import Emu, Inches, Pt
 
 BASE = Path(__file__).resolve().parent
 SPEC_PATH = BASE / "slides-spec.json"
@@ -401,6 +401,27 @@ def render_steps(slide, s):
         add_emph_box(slide, emph_top, 0.85, s["emphasis"], 26)
 
 
+def render_chart(slide, s):
+    """見出し＋グラフ画像（アスペクト維持で本文領域に最大化・中央寄せ）＋footer。"""
+    add_title(slide, s["title"])
+    bottom = CONTENT_BOTTOM
+    if s.get("footer"):
+        add_footer(slide, s["footer"])
+        bottom = FOOTER_Y - 0.08
+
+    path = BASE / s["image"]
+    if not path.exists():
+        raise FileNotFoundError(
+            "グラフ画像がない: %s（python build_chart.py で生成する）" % path)
+
+    pic = slide.shapes.add_picture(str(path), Inches(0), Inches(0))
+    avail_w, avail_h = Inches(CW), Inches(bottom - CONTENT_TOP)
+    scale = min(avail_w / pic.width, avail_h / pic.height)
+    pic.width, pic.height = int(pic.width * scale), int(pic.height * scale)
+    pic.left = Emu(int(Inches(ML) + (avail_w - pic.width) / 2))
+    pic.top = Emu(int(Inches(CONTENT_TOP) + (avail_h - pic.height) / 2))
+
+
 def render_sources(slide, s):
     add_title(slide, s["title"])
     bottom = CONTENT_BOTTOM
@@ -439,6 +460,7 @@ RENDERERS = {
     "bullets": render_bullets,
     "stat": render_stat,
     "steps": render_steps,
+    "chart": render_chart,
     "sources": render_sources,
 }
 
@@ -528,6 +550,17 @@ def verify():
              "" if not bad_font else " bad=%s" % sorted(set(bad_font)),
              sorted(fonts)))
     ok &= not bad_notes and not bad_body and not bad_font
+
+    # (e) chart スライスに画像が載っているか
+    chart_idx = [i for i, s in enumerate(spec["slides"], start=1) if s["type"] == "chart"]
+    no_pic = [i for i in chart_idx
+              if not any(shp.shape_type == MSO_SHAPE_TYPE.PICTURE
+                         for shp in prs.slides[i - 1].shapes)]
+    e_ok = bool(chart_idx) and not no_pic
+    print("[5] picture on chart slides : %s -> %s%s"
+          % (chart_idx, "OK" if e_ok else "NG",
+             "" if not no_pic else " missing=%s" % no_pic))
+    ok &= e_ok
 
     print("RESULT: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
